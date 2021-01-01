@@ -1,0 +1,24 @@
+Package: deggust
+Title: Visualise experimental designs from edibble as ggplot graphics
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Emi",
+           family = "Tanaka",
+           role = c("aut", "cre"),
+           email = "dr.emi.tanaka@gmail.com",
+           comment = c(ORCID = "0000-0002-1455-259X"))
+Description: Visualisation of designs as ggplot graphics.
+License: GPL-3 + file LICENSE
+Encoding: UTF-8
+Language: es
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    magrittr,
+    ggplot2,
+    edibble,
+    rlang
+URL: http://deggust.emitanaka.org, https://github.com/emitanaka/deggust
+BugReports: https://github.com/emitanaka/deggust/issues
+Remotes: emitanaka/edibble
