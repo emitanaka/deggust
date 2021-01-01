@@ -9,7 +9,10 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
-There’s not much to see here.
+The aim for deggust R-package is to visualise designs constructed from
+edibble R-package. The visualisation are ggplot graphics.
+
+Right now, there’s not much to see here.
 
 ## Installation
 
