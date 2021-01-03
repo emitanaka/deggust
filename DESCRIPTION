@@ -18,7 +18,9 @@ Imports:
     magrittr,
     ggplot2,
     edibble,
-    rlang
+    rlang,
+    grid,
+    ggraph
 URL: http://deggust.emitanaka.org, https://github.com/emitanaka/deggust
 BugReports: https://github.com/emitanaka/deggust/issues
 Remotes: emitanaka/edibble

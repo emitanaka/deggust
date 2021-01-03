@@ -22,3 +22,8 @@ The development version from [GitHub](https://github.com/) with:
 # install.packages("devtools")
 devtools::install_github("emitanaka/deggust")
 ```
+
+## Related work
+
+  - `desplot` for visualising designs
+  - `ExploreModelMatrix` for exploring design matrix
