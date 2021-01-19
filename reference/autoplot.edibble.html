@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • deggust</title>
+<title>Auto plot or ggplot2 of an edibble design — autoplot.edibble • deggust</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,7 +48,9 @@
   <link href="../extra.css" rel="stylesheet">
   
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Auto plot or ggplot2 of an edibble design — autoplot.edibble" />
+<meta property="og:description" content="This plot produces the same type of plot using the plot functions in
+edibble package except the plots are ggplot" />
 <meta property="og:image" content="https://deggust.emitanaka.org/logo.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:creator" content="@emitanaka" />
@@ -81,7 +83,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -128,42 +130,58 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Auto plot or <code>ggplot2</code> of an edibble design</h1>
+    <small class="dont-index">Source: <a href='https://github.com/emitanaka/deggust/blob/master/R/autoplot.R'><code>R/autoplot.R</code></a></small>
+    <div class="hidden name"><code>autoplot.edibble.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>This plot produces the same type of plot using the <code>plot</code> functions in
+<code>edibble</code> package except the plots are <code>ggplot</code></p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='co'># S3 method for EdibbleDesign</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/autoplot.html'>autoplot</a></span><span class='op'>(</span><span class='va'>.edibble</span>, view <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"high"</span>, <span class='st'>"low"</span><span class='op'>)</span>, <span class='va'>...</span>, main <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="autoplot.edibble.html">autoplot(<i>&lt;EdibbleDesign&gt;</i>)</a></code> <code><a href="autoplot.edibble.html">autoplot(<i>&lt;edbl_graph&gt;</i>)</a></code> <code><a href="autoplot.edibble.html">autoplot(<i>&lt;edbl_table&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Auto plot or <code>ggplot2</code> of an edibble design</p></td>
-      </tr>
-    </tbody>
+<span class='co'># S3 method for edbl_graph</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/autoplot.html'>autoplot</a></span><span class='op'>(</span><span class='va'>.edibble</span>, view <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"high"</span>, <span class='st'>"low"</span><span class='op'>)</span>, <span class='va'>...</span>, main <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+
+<span class='co'># S3 method for edbl_table</span>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/autoplot.html'>autoplot</a></span><span class='op'>(</span><span class='va'>.edibble</span>, view <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"high"</span>, <span class='st'>"low"</span><span class='op'>)</span>, <span class='va'>...</span>, main <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>.edibble</th>
+      <td><p>An edibble desgin, an edibble table or an edibble graph.</p></td>
+    </tr>
+    <tr>
+      <th>view</th>
+      <td><p>A string specifying the level of the view ("high" or "low") to plot.
+By default it is "high".</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional parameters passed to <code>plot.igraph</code>.</p></td>
+    </tr>
+    <tr>
+      <th>main</th>
+      <td><p>The title of the plot. By default it is the
+name of the edibble design.</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A <code>ggraph</code> and <code>ggplot</code> object.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>See <code><a href='https://edibble.emitanaka.org/reference/plot.edibble.html'>plot.edibble</a></code> for the base plot version of this plot.</p></div>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

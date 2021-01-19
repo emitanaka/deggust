@@ -90,7 +90,7 @@
 <!-- badges: start -->
 
 <p>The aim for deggust R-package is to visualise designs constructed from edibble R-package. The visualisation are ggplot graphics.</p>
-<p>Right now, there’s not much to see here.</p>
+<p><strong>(WIP)</strong></p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -98,6 +98,33 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"emitanaka/deggust"</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="examples" class="section level2">
+<h2 class="hasAnchor">
+<a href="#examples" class="anchor"></a>Examples</h2>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://edibble.emitanaka.org/">edibble</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://deggust.emitanaka.org">deggust</a></span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1231</span><span class="op">)</span> 
+
+<span class="va">rcbd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://edibble.emitanaka.org/reference/start_design.html">start_design</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"RCBD"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://edibble.emitanaka.org/reference/set_units.html">set_units</a></span><span class="op">(</span>block <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B1"</span>, <span class="st">"B2"</span><span class="op">)</span>,
+            unit <span class="op">=</span> <span class="fu"><a href="https://edibble.emitanaka.org/reference/nested_in.html">nested_in</a></span><span class="op">(</span><span class="va">block</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://edibble.emitanaka.org/reference/set_trts.html">set_trts</a></span><span class="op">(</span>trt <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://edibble.emitanaka.org/reference/allocate_trts.html">allocate_trts</a></span><span class="op">(</span><span class="op">~</span><span class="va">unit</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://edibble.emitanaka.org/reference/randomise_trts.html">randomise_trts</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">rcbd</span><span class="op">)</span>
+<span class="co">#&gt; Multiple parents. Unfolding graph</span>
+<span class="co">#&gt; Multiple roots in graph. Choosing the first</span>
+<span class="co">#&gt; Using `stress` as default layout</span></code></pre></div>
+<p><img src="reference/figures/README-rcbd-high-plot-1.png"><!-- --></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">rcbd</span>, view <span class="op">=</span> <span class="st">"low"</span><span class="op">)</span>
+<span class="co">#&gt; Using `sugiyama` as default layout</span></code></pre></div>
+<p><img src="reference/figures/README-rcbd-low-plot-1.png"><!-- --></p>
 </div>
 <div id="related-work" class="section level2">
 <h2 class="hasAnchor">
