@@ -12,7 +12,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 The aim for deggust R-package is to visualise designs constructed from
 edibble R-package. The visualisation are ggplot graphics.
 
-Right now, there’s not much to see here.
+**(WIP)**
 
 ## Installation
 
@@ -22,6 +22,39 @@ The development version from [GitHub](https://github.com/) with:
 # install.packages("devtools")
 devtools::install_github("emitanaka/deggust")
 ```
+
+## Examples
+
+``` r
+library(ggplot2)
+library(edibble)
+library(deggust)
+
+set.seed(1231) 
+
+rcbd <- start_design(name = "RCBD") %>%
+  set_units(block = c("B1", "B2"),
+            unit = nested_in(block, 6)) %>%
+  set_trts(trt = LETTERS[1:4]) %>%
+  allocate_trts(~unit) %>%
+  randomise_trts()
+```
+
+``` r
+autoplot(rcbd)
+#> Multiple parents. Unfolding graph
+#> Multiple roots in graph. Choosing the first
+#> Using `stress` as default layout
+```
+
+![](man/figures/README-rcbd-high-plot-1.png)<!-- -->
+
+``` r
+autoplot(rcbd, view = "low")
+#> Using `sugiyama` as default layout
+```
+
+![](man/figures/README-rcbd-low-plot-1.png)<!-- -->
 
 ## Related work
 

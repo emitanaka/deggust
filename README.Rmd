@@ -8,8 +8,7 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
+  fig.path = "man/figures/README-"
 )
 ```
 
@@ -21,8 +20,11 @@ knitr::opts_chunk$set(
 
 The aim for deggust R-package is to visualise designs constructed from edibble R-package. The visualisation are ggplot graphics.
 
+**(WIP)**
 
-Right now, there's not much to see here. 
+
+
+
 
 ## Installation
 
@@ -32,6 +34,32 @@ The development version from [GitHub](https://github.com/) with:
 # install.packages("devtools")
 devtools::install_github("emitanaka/deggust")
 ```
+
+## Examples
+
+```{r}
+library(ggplot2)
+library(edibble)
+library(deggust)
+
+set.seed(1231) 
+
+rcbd <- start_design(name = "RCBD") %>%
+  set_units(block = c("B1", "B2"),
+            unit = nested_in(block, 6)) %>%
+  set_trts(trt = LETTERS[1:4]) %>%
+  allocate_trts(~unit) %>%
+  randomise_trts()
+```
+
+```{r rcbd-high-plot, fig.width = 4, fig.height = 4}
+autoplot(rcbd)
+```
+
+```{r rcbd-low-plot, fig.width = 6, fig.height = 6}
+autoplot(rcbd, view = "low")
+```
+
 
 ## Related work
 
