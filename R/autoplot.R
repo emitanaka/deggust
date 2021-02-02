@@ -72,3 +72,11 @@ autoplot.edbl_table <- function(.edibble, view = c("high", "low"), ..., main = N
   autoplot(get_edibble_design(.edibble))
 }
 
+#' @importFrom edibble is_edibble_table
+autoplot_test <- function(.table, ...) {
+  if(!is_edibble_table(.table)) {
+    abort("The supplied object is not an edibble table.")
+  }
+
+
+}
