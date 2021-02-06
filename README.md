@@ -60,3 +60,4 @@ autoplot(rcbd, view = "low")
 
   - `desplot` for visualising designs
   - `ExploreModelMatrix` for exploring design matrix
+  - `ez` for easy analysis and visualization of factorial experiments
