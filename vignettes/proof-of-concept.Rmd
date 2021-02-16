@@ -1,0 +1,66 @@
+---
+title: "proof-of-concept"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{proof-of-concept}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ggplot2)
+library(edibble)
+library(deggust)
+
+set.seed(1231) 
+
+rcbd <- start_design(name = "RCBD") %>%
+  set_units(block = c("B1", "B2"),
+            unit = nested_in(block, 6)) %>%
+  set_trts(trt = LETTERS[1:4]) %>%
+  allocate_trts(~unit) %>%
+  randomise_trts() %>% 
+  serve_table()
+```
+## Proof of concepts
+
+Something like below should be the result of `autoplot(df)` with units fixed
+as nesting labels. 
+
+```{r}
+grcbd <- ggplot(rcbd, aes(unit, block, fill = trt)) +
+  geom_tile(color = "black", size = 1.3) +
+  coord_equal()
+
+grcbd
+```
+
+Below modifies from the "square tile" to the image provided by the user. 
+
+```{r, eval = FALSE}
+grcbd + geom_units(aes(unit), image = "person.png")
+```
+
+```{r}
+library(ggraph)
+library(igraph)
+graph <- make_empty_graph(n = 0) %>% 
+  add_vertices(nv = nrow(rcbd),
+               attr = rcbd)
+
+ggraph(graph, layout = "manual",
+            x = rep(1:2, each = nrow(df) / 2),
+            y = rep(1:(nrow(df)/2), 2)) + 
+  #geom_node_circle(aes(r = 0.1), fill = "red") +
+  #geom_node_point() + 
+  geom_node_tile(aes(width = 1, height = 1, fill = trt)) + 
+  geom_node_text(aes(label = unit)) + 
+  coord_equal()
+```
