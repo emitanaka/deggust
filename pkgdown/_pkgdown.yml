@@ -3,12 +3,12 @@ url: https://deggust.emitanaka.org
 
 home:
   title: An R package that visualise experimental design constructed with edibble as ggplot graphics
-  description: Bla bla
+  description: Visualise experimental designs.
 
 template:
   opengraph:
     twitter:
-      creator: "@emitanaka"
+      creator: "@statgen"
       site: "@MonashEBS"
       card: summary_large_image
   params:
