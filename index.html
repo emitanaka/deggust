@@ -150,9 +150,8 @@
 <p><img src="reference/figures/README-unnamed-chunk-3-1.png"><!-- --></p>
 <p>Easy to replace the unit shape:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">unit1</span><span class="op">)</span> <span class="op">%+%</span> <span class="fu">geom_unit</span><span class="op">(</span>shape <span class="op">=</span> <span class="st">"square"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">unit1</span><span class="op">)</span> <span class="op">+</span> <span class="fu">restyle_units</span><span class="op">(</span>shape <span class="op">=</span> <span class="st">"square"</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png"><!-- --></p>
-<p>Note the above works by replacing <code><a href="https://ggplot2.tidyverse.org/reference/gg-add.html">%+%</a></code> with <code><a href="https://rdrr.io/r/base/Arithmetic.html">+</a></code> but that’s usually for adding another layer on so we don’t want to use that syntax.</p>
 </div>
 <div id="related-work" class="section level2">
 <h2 class="hasAnchor">
