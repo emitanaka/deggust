@@ -74,13 +74,10 @@ autoplot(unit1)
 Easy to replace the unit shape:
 
 ``` r
-autoplot(unit1) %+% geom_unit(shape = "square")
+autoplot(unit1) + restyle_units(shape = "square")
 ```
 
 ![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
-
-Note the above works by replacing `%+%` with `+` but that’s usually for
-adding another layer on so we don’t want to use that syntax.
 
 ## Related work
 

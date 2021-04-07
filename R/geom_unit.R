@@ -1,6 +1,6 @@
 
 #' @export
-geom_unit <- function(shape = NULL,
+restyle_units <- function(shape = NULL,
                       image = NULL, ...) {
   structure(list(shape = shape,
                  image = image,
