@@ -56,6 +56,32 @@ autoplot(rcbd, view = "low")
 
 ![](man/figures/README-rcbd-low-plot-1.png)<!-- -->
 
+Automatic look into the design layout:
+
+``` r
+unit1 <- start_design(name = "One unit") %>%
+    set_trts(trt = 4) %>%
+    set_units(unit = 16) %>%
+    allocate_trts(trt ~ unit) %>%
+    randomise_trts() %>%
+    serve_table()
+
+autoplot(unit1)
+```
+
+![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
+
+Easy to replace the unit shape:
+
+``` r
+autoplot(unit1) %+% geom_unit(shape = "square")
+```
+
+![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
+
+Note the above works by replacing `%+%` with `+` but that’s usually for
+adding another layer on so we don’t want to use that syntax.
+
 ## Related work
 
   - `desplot` for visualising designs
