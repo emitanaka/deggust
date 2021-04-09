@@ -1,5 +1,5 @@
 #' @keywords internal
-#' @import rlang edibble
+#' @import rlang edibble ggplot2
 "_PACKAGE"
 
 # The following block is used by usethis to automatically manage

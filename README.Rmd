@@ -42,23 +42,8 @@ library(ggplot2)
 library(edibble)
 library(deggust)
 
-set.seed(1231) 
-
-rcbd <- start_design(name = "RCBD") %>%
-  set_units(block = c("B1", "B2"),
-            unit = nested_in(block, 6)) %>%
-  set_trts(trt = LETTERS[1:4]) %>%
-  allocate_trts(~unit) %>%
-  randomise_trts()
 ```
 
-```{r rcbd-high-plot, fig.width = 4, fig.height = 4}
-autoplot(rcbd)
-```
-
-```{r rcbd-low-plot, fig.width = 6, fig.height = 6}
-autoplot(rcbd, view = "low")
-```
 
 Automatic look into the design layout:
 
@@ -76,10 +61,39 @@ autoplot(unit1)
 Easy to replace the unit shape:
 
 ```{r}
-autoplot(unit1) + restyle_units(shape = "square")
+autoplot(unit1) + restyle_units(shape = "box")
+```
+
+```{r}
+autoplot(unit1) + restyle_units(shape = "triangle")
+```
+
+```{r}
+autoplot(unit1) + restyle_units(shape = "hexagon")
 ```
 
 
+## Other WIP graphs
+
+```{r}
+set.seed(1231) 
+
+rcbd <- start_design(name = "RCBD") %>%
+  set_units(block = c("B1", "B2"),
+            unit = nested_in(block, 6)) %>%
+  set_trts(trt = LETTERS[1:4]) %>%
+  allocate_trts(~unit) %>%
+  randomise_trts()
+```
+
+
+```{r rcbd-high-plot, fig.width = 4, fig.height = 4}
+autoplot(rcbd)
+```
+
+```{r rcbd-low-plot, fig.width = 6, fig.height = 6}
+autoplot(rcbd, view = "low")
+```
 
 
 

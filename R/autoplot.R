@@ -92,7 +92,7 @@ autoplot.edbl_table <- function(.edibble, width = NULL, height = NULL) {
     nodes <- .edibble[c(unit_names, setdiff(names(.edibble), unit_names))]
     graph <- igraph::graph_from_data_frame(edges,
                                            vertices = edibble:::as_data_frame(nodes))
-    ggraph::ggraph(graph,
+    plot <- ggraph::ggraph(graph,
                    layout = "manual",
                    x = rep(1:unit_dims[1], length.out = nlevels_unit),
                    y = sort(rep(1:unit_dims[2], length.out = nlevels_unit))) +
@@ -102,6 +102,8 @@ autoplot.edbl_table <- function(.edibble, width = NULL, height = NULL) {
       #ggraph::geom_node_tile(width = 0.8, height = 0.8, aes_string(fill = trt_names)) +
       ggraph::geom_node_text(aes(label =  unit_vec)) +
       ggplot2::coord_equal()
+
+    addGeomUnitClass(plot, identify_layer(plot, "geom", "GeomCircle"))
 
   } else if(nunits==2) {
     # make it two-dimensional

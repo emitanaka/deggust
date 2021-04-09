@@ -3,8 +3,17 @@
 # ggtype -> geom, stat
 # what -> "GeomCircle"
 identify_layer <- function(x, ggtype, what) {
-  nms <- vapply(x$layers, function(x) class(x[[ggtype]])[1], character(1))
-  which(nms == what)
+  idx <- vapply(x$layers, function(zz) any(class(zz[[ggtype]])==what), logical(1))
+  which(idx)
+}
+
+
+addGeomUnitClass <- function(plot, ilayer) {
+  cl <- class(plot$layers[[ilayer]]$geom)
+  if(!"GeomUnit" %in% cl) {
+    class(plot$layers[[ilayer]]$geom) <- c(cl, "GeomUnit")
+  }
+  plot
 }
 
 

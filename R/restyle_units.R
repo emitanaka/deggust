@@ -1,7 +1,7 @@
 
 #' @export
 restyle_units <- function(shape = NULL,
-                      image = NULL, ...) {
+                          image = NULL, ...) {
   structure(list(shape = shape,
                  image = image,
                  ...),
@@ -12,15 +12,36 @@ restyle_units <- function(shape = NULL,
 #' @keywords internal
 #' @export
 ggplot_add.degg_unit <- function(object, plot, object_name) {
-  ilayer <- identify_layer(plot, "geom", "GeomCircle")
+  ilayer <- identify_layer(plot, "geom", "GeomUnit")[1]
+  # Some how GeomUnit gets into 3rd layer too
   if(!is.null(object$shape)) {
     unit_layer <- plot$layers[[ilayer]]
+    width <- object$width %||% 0.5
+    height <- object$height %||% 0.5
+    r <- object$r %||% 0.3
     plot$layers[[ilayer]] <- switch(object$shape,
-                                    "square" = ggraph::geom_node_tile(aes(width = 0.3, height = 0.3,
-                                                                          fill =  !!unit_layer$mapping$fill)),
-                                    "point" = ggraph::geom_node_point(aes(shape = 1,
-                                                                          color =  !!unit_layer$mapping$fill)),
+                                    "box" = ,
+                                    "rect" = ,
+                                    "rectangle" = geom_node_shape(aes(x = !!unit_layer$mapping$x0,
+                                                                      y = !!unit_layer$mapping$y0,
+                                                                      width = width, height = height,
+                                                                      fill = !!unit_layer$mapping$fill,
+                                                                      shape = "box")),
+                                    "square" = ,
+                                    "pentagon" = ,
+                                    "hexagon" = ,
+                                    "septagon" = ,
+                                    "octagon" = ,
+                                    "triangle" = geom_node_shape(aes(x = !!unit_layer$mapping$x0,
+                                                                     y = !!unit_layer$mapping$y0,
+                                                                     width = width, height = height,
+                                                                     fill = !!unit_layer$mapping$fill,
+                                                                     shape = object$shape)),
+
+                                    "circle" = geom_node_circle(aes(r = r,
+                                                                    fill =  !!unit_layer$mapping$fill)),
                                     "none" = NULL)
+    addGeomUnitClass(plot, ilayer)
   }
   plot
 }

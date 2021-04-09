@@ -29,7 +29,46 @@ devtools::install_github("emitanaka/deggust")
 library(ggplot2)
 library(edibble)
 library(deggust)
+```
 
+Automatic look into the design layout:
+
+``` r
+unit1 <- start_design(name = "One unit") %>%
+    set_trts(trt = 4) %>%
+    set_units(unit = 16) %>%
+    allocate_trts(trt ~ unit) %>%
+    randomise_trts() %>%
+    serve_table()
+
+autoplot(unit1)
+```
+
+![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
+
+Easy to replace the unit shape:
+
+``` r
+autoplot(unit1) + restyle_units(shape = "box")
+```
+
+![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
+
+``` r
+autoplot(unit1) + restyle_units(shape = "triangle")
+```
+
+![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
+
+``` r
+autoplot(unit1) + restyle_units(shape = "hexagon")
+```
+
+![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
+
+## Other WIP graphs
+
+``` r
 set.seed(1231) 
 
 rcbd <- start_design(name = "RCBD") %>%
@@ -55,29 +94,6 @@ autoplot(rcbd, view = "low")
 ```
 
 ![](man/figures/README-rcbd-low-plot-1.png)<!-- -->
-
-Automatic look into the design layout:
-
-``` r
-unit1 <- start_design(name = "One unit") %>%
-    set_trts(trt = 4) %>%
-    set_units(unit = 16) %>%
-    allocate_trts(trt ~ unit) %>%
-    randomise_trts() %>%
-    serve_table()
-
-autoplot(unit1)
-```
-
-![](man/figures/README-unnamed-chunk-3-1.png)<!-- -->
-
-Easy to replace the unit shape:
-
-``` r
-autoplot(unit1) + restyle_units(shape = "square")
-```
-
-![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
 
 ## Related work
 
