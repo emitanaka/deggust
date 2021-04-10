@@ -8,6 +8,8 @@ restyle_units <- function(shape = NULL,
             class = c("degg_unit", "list"))
 }
 
+
+
 #' @importFrom ggplot2 ggplot_add %+%
 #' @keywords internal
 #' @export
@@ -26,22 +28,23 @@ ggplot_add.degg_unit <- function(object, plot, object_name) {
                                                                       y = !!unit_layer$mapping$y0,
                                                                       width = width, height = height,
                                                                       fill = !!unit_layer$mapping$fill,
-                                                                      shape = "box")),
+                                                                      shape = "box", phase = object$phase)),
                                     "square" = ,
                                     "pentagon" = ,
                                     "hexagon" = ,
                                     "septagon" = ,
                                     "octagon" = ,
+                                    "ellipse" = ,
                                     "triangle" = geom_node_shape(aes(x = !!unit_layer$mapping$x0,
                                                                      y = !!unit_layer$mapping$y0,
                                                                      width = width, height = height,
                                                                      fill = !!unit_layer$mapping$fill,
-                                                                     shape = object$shape)),
+                                                                     shape = object$shape, phase = object$phase)),
 
                                     "circle" = geom_node_circle(aes(r = r,
                                                                     fill =  !!unit_layer$mapping$fill)),
                                     "none" = NULL)
-    addGeomUnitClass(plot, ilayer)
+    plot <- addGeomClass(plot, ilayer, "GeomUnit")
   }
   plot
 }

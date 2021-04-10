@@ -23,47 +23,66 @@ regular_polygon <- function(n = 5, phase = 0, radius = 1){
   data.frame(x = Re(locs), y = Im(locs))
 }
 
-regular_polygon_data <- function(data, n = 5, phase = 0, radius = 1) {
-  corners <- regular_polygon(n = n, phase = phase, radius = radius)
+regular_polygon_data <- function(data, n = 5, phase = 0, radius = 1,
+                                 width = 1, height = 1) {
+  corners <- regular_polygon(n = n, phase = phase)
   data$group <- seq_len(NROW(data))
-  out <- data[0, ]
-  for(i in 1:n) {
-    new <- data
-    new$x <- new$x + corners$x[i]
-    new$y <- new$y + corners$y[i]
-    out <- rbind(out, new)
-  }
+  out <- Reduce(rbind, Map(function(i) {
+      new <- data
+      new$x <- new$x + corners$x[i] * width/2
+      new$y <- new$y + corners$y[i] * height/2
+      new
+    }, 1:n))
   out[order(out$group), ]
 }
 
 custom_polygon_shape.triangle <- function(data, scales, ...) {
   data$group <- seq_len(NROW(data))
-  regular_polygon_data(data, n = 3, phase = -pi/6, radius = data$width[1])
+  phase <- data$phase[1] %||% -pi/6
+  regular_polygon_data(data, n = 3, phase = phase,
+                       width = data$width[1], height = data$height[1])
 }
 
 custom_polygon_shape.square <- function(data, scales, ...) {
   data$group <- seq_len(NROW(data))
-  regular_polygon_data(data, n = 4, phase = pi/4, radius = data$width[1])
+  phase <- data$phase[1] %||% pi/4
+  regular_polygon_data(data, n = 4, phase = phase,
+                       width = data$width[1], height = data$height[1])
 }
 
 custom_polygon_shape.pentagon <- function(data, scales, ...) {
   data$group <- seq_len(NROW(data))
-  regular_polygon_data(data, n = 5, phase = pi/10, radius = data$width[1])
+  phase <- data$phase[1] %||% pi/10
+  regular_polygon_data(data, n = 5, phase = phase,
+                       width = data$width[1], height = data$height[1])
 }
 
 custom_polygon_shape.hexagon <- function(data, scales, ...) {
   data$group <- seq_len(NROW(data))
-  regular_polygon_data(data, n = 6, phase = 0, radius = data$width[1])
+  phase <- data$phase[1] %||% 0
+  regular_polygon_data(data, n = 6, phase = phase,
+                       width = data$width[1], height = data$height[1])
 }
 
 custom_polygon_shape.septagon <- function(data, scales, ...) {
   data$group <- seq_len(NROW(data))
-  regular_polygon_data(data, n = 7, phase = -pi/14, radius = data$width[1])
+  phase <- data$phase[1] %||% -pi/14
+  regular_polygon_data(data, n = 7, phase = phase,
+                       width = data$width[1], height = data$height[1])
 }
 
 custom_polygon_shape.octagon <- function(data, scales, ...) {
   data$group <- seq_len(NROW(data))
-  regular_polygon_data(data, n = 8, phase = pi/8, radius = data$width[1])
+  phase <- data$phase[1] %||% pi/8
+  regular_polygon_data(data, n = 8, phase = phase,
+                       width = data$width[1], height = data$height[1])
+}
+
+custom_polygon_shape.ellipse <- function(data, scales, ...) {
+  data$group <- seq_len(NROW(data))
+  phase <- data$phase[1] %||% 0
+  regular_polygon_data(data, n = 50, phase = phase,
+                       width = data$width[1], height = data$height[1])
 }
 
 custom_polygon_shape.box <- function(data, scales, ...) {
@@ -72,13 +91,12 @@ custom_polygon_shape.box <- function(data, scales, ...) {
   height <- data$height[1]
   corners <- data.frame(x = c(-width/2, -width/2, width/2, width/2),
                         y = c(-height/2, height/2, height/2, -height/2))
-  out <- data[0, ]
-  for(i in 1:4) {
-    new <- data
-    new$x <- new$x + corners$x[i]
-    new$y <- new$y + corners$y[i]
-    out <- rbind(out, new)
-  }
+  out <- Reduce(rbind, Map(function(i) {
+                    new <- data
+                    new$x <- new$x + corners$x[i]
+                    new$y <- new$y + corners$y[i]
+                    new
+                  }, 1:4))
   out[order(out$group), ]
 }
 
@@ -91,8 +109,8 @@ StatNodeShape <- ggproto("StatNodeShape", Stat,
                            do.call(paste0("custom_polygon_shape.", data$shape[1]),
                                    c(list(data = data, scales = scales), list(...)))
                          },
-                         extra_params = c("na.rm", "shape"),
-                         optional_aes = c("width", "height", "r", "fill", "shape"))
+                         extra_params = c("na.rm", "shape", "phase"),
+                         optional_aes = c("width", "height", "r", "fill", "shape", "phase"))
 
 
 #' @export
@@ -114,7 +132,7 @@ GeomNodeShape <- ggproto("GeomNodeShape", Geom,
                             }
                             first_idx <- !duplicated(munched$group)
                             first_rows <- munched[first_idx, ]
-                            polygonGrob(munched$x, munched$y, default.units = "native",
+                            grid::polygonGrob(munched$x, munched$y, default.units = "native",
                                           id = munched$group,
                                           gp = grid::gpar(col = first_rows$colour,
                                                     fill = scales::alpha(first_rows$fill, first_rows$alpha),
