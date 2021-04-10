@@ -61,7 +61,9 @@ autoplot(unit1) + restyle_units(shape = "triangle")
 ![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
 
 ``` r
-autoplot(unit1) + restyle_units(shape = "hexagon")
+autoplot(unit1) + 
+  restyle_units(shape = "hexagon") +
+  restyle_labels(size = 6, color = "gray", fontface = "bold")
 ```
 
 ![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
