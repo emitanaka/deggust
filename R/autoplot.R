@@ -103,7 +103,8 @@ autoplot.edbl_table <- function(.edibble, width = NULL, height = NULL) {
       ggraph::geom_node_text(aes(label =  unit_vec)) +
       ggplot2::coord_equal()
 
-    addGeomUnitClass(plot, identify_layer(plot, "geom", "GeomCircle"))
+    plot <- addGeomClass(plot, identify_layer(plot, "geom", "GeomCircle"), "GeomUnit")
+    addGeomClass(plot, identify_layer(plot, "geom", "GeomText"), "GeomUnitText")
 
   } else if(nunits==2) {
     # make it two-dimensional

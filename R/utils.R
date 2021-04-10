@@ -8,10 +8,10 @@ identify_layer <- function(x, ggtype, what) {
 }
 
 
-addGeomUnitClass <- function(plot, ilayer) {
+addGeomClass <- function(plot, ilayer, class) {
   cl <- class(plot$layers[[ilayer]]$geom)
-  if(!"GeomUnit" %in% cl) {
-    class(plot$layers[[ilayer]]$geom) <- c(cl, "GeomUnit")
+  if(!class %in% cl) {
+    class(plot$layers[[ilayer]]$geom) <- c(cl, class)
   }
   plot
 }
