@@ -3,9 +3,9 @@
 
 #' @export
 geom_node_shape <- function(mapping = NULL, data = NULL, position = "identity",
-                            shape = "circle", show.legend = NA, inherit.aes = TRUE, ...) {
-  layer(data = data, mapping = mapping, stat = StatNodeShape,
-        # or GeomPolygon
+                            stat = "identity", shape = "circle",
+                            show.legend = NA, inherit.aes = TRUE, ...) {
+  layer(data = data, mapping = mapping, stat = stat,
         geom = GeomNodeShape, position = position, show.legend = show.legend,
         inherit.aes = inherit.aes, params = list(na.rm = FALSE, shape = shape, ...))
 
@@ -23,108 +23,79 @@ regular_polygon <- function(n = 5, phase = 0, radius = 1){
   data.frame(x = Re(locs), y = Im(locs))
 }
 
-regular_polygon_data <- function(data, n = 5, phase = 0, radius = 1,
-                                 width = 1, height = 1) {
-  corners <- regular_polygon(n = n, phase = phase)
-  data$group <- seq_len(NROW(data))
-  out <- Reduce(rbind, Map(function(i) {
+regular_polygon_data <- function(data, n = 5, phase = 0, suffix = 0) {
+  vertices <- regular_polygon(n = n, phase = phase)
+  data$group <- paste0(seq_len(NROW(data)), "-", suffix)
+  Reduce(rbind, Map(function(i) {
       new <- data
-      new$x <- new$x + corners$x[i] * width/2
-      new$y <- new$y + corners$y[i] * height/2
+      new$x <- new$x + vertices$x[i] * new$width / 2
+      new$y <- new$y + vertices$y[i] * new$height / 2
       new
     }, 1:n))
-  out[order(out$group), ]
 }
 
-custom_polygon_shape.triangle <- function(data, scales, ...) {
-  data$group <- seq_len(NROW(data))
-  phase <- data$phase[1] %||% -pi/6
-  regular_polygon_data(data, n = 3, phase = phase,
-                       width = data$width[1], height = data$height[1])
+# shapes inspired by https://graphviz.org/doc/info/shapes.html
+
+
+n_shape <- function(shape) {
+  switch(shape,
+         "triangle"  = 3,
+         "square"    = ,
+         "rect"      = ,
+         "rectangle" = ,
+         "box"       = 4,
+         "pentagon"  = 5,
+         "hexagon"   = 6,
+         "septagon"  = 7,
+         "octagon"   = 8,
+         "oval"      = ,
+         "ellipse"   = ,
+         "circle"    = 50)
 }
 
-custom_polygon_shape.square <- function(data, scales, ...) {
-  data$group <- seq_len(NROW(data))
-  phase <- data$phase[1] %||% pi/4
-  regular_polygon_data(data, n = 4, phase = phase,
-                       width = data$width[1], height = data$height[1])
+phase_shape <- function(shape) {
+  switch(shape,
+         "triangle"  = -pi/6,
+         "square"    = ,
+         "rect"      = ,
+         "rectangle" = ,
+         "box"       = pi/4,
+         "pentagon"  = pi/10,
+         "hexagon"   = 0,
+         "septagon"  = -pi/14,
+         "octagon"   = pi/8,
+         "circle"    = 0)
 }
-
-custom_polygon_shape.pentagon <- function(data, scales, ...) {
-  data$group <- seq_len(NROW(data))
-  phase <- data$phase[1] %||% pi/10
-  regular_polygon_data(data, n = 5, phase = phase,
-                       width = data$width[1], height = data$height[1])
-}
-
-custom_polygon_shape.hexagon <- function(data, scales, ...) {
-  data$group <- seq_len(NROW(data))
-  phase <- data$phase[1] %||% 0
-  regular_polygon_data(data, n = 6, phase = phase,
-                       width = data$width[1], height = data$height[1])
-}
-
-custom_polygon_shape.septagon <- function(data, scales, ...) {
-  data$group <- seq_len(NROW(data))
-  phase <- data$phase[1] %||% -pi/14
-  regular_polygon_data(data, n = 7, phase = phase,
-                       width = data$width[1], height = data$height[1])
-}
-
-custom_polygon_shape.octagon <- function(data, scales, ...) {
-  data$group <- seq_len(NROW(data))
-  phase <- data$phase[1] %||% pi/8
-  regular_polygon_data(data, n = 8, phase = phase,
-                       width = data$width[1], height = data$height[1])
-}
-
-custom_polygon_shape.ellipse <- function(data, scales, ...) {
-  data$group <- seq_len(NROW(data))
-  phase <- data$phase[1] %||% 0
-  regular_polygon_data(data, n = 50, phase = phase,
-                       width = data$width[1], height = data$height[1])
-}
-
-custom_polygon_shape.box <- function(data, scales, ...) {
-  data$group <- seq_len(NROW(data))
-  width <- data$width[1]
-  height <- data$height[1]
-  corners <- data.frame(x = c(-width/2, -width/2, width/2, width/2),
-                        y = c(-height/2, height/2, height/2, -height/2))
-  out <- Reduce(rbind, Map(function(i) {
-                    new <- data
-                    new$x <- new$x + corners$x[i]
-                    new$y <- new$y + corners$y[i]
-                    new
-                  }, 1:4))
-  out[order(out$group), ]
-}
-
-
-
-#' @export
-StatNodeShape <- ggproto("StatNodeShape", Stat,
-                         compute_panel = function(data, scales, ...) {
-                           #browser()
-                           do.call(paste0("custom_polygon_shape.", data$shape[1]),
-                                   c(list(data = data, scales = scales), list(...)))
-                         },
-                         extra_params = c("na.rm", "shape", "phase"),
-                         optional_aes = c("width", "height", "r", "fill", "shape", "phase"))
 
 
 #' @export
 GeomNodeShape <- ggproto("GeomNodeShape", Geom,
                          required_aes = c("x", "y"),
+                         extra_params = c("na.rm", "shape", "phase"),
+                         draw_key = draw_key_shape,
                          default_aes = aes(colour = "black",
                                            lwd = 1, lty = "solid",
-                                           alpha = 1),
+                                           alpha = 1, fill = "white"),
+                         setup_data = function(data, params) {
+                           data$width <- data$width %||% params$width %||% resolution(data$x, FALSE) * 0.8
+                           data$height <- data$height %||% params$height %||% resolution(data$y, FALSE) * 0.8
+                           data$shape <- data$shape %||% params$shape
+                           data$group <- seq_len(NROW(data))
+                           data_shape <- split(data, data$shape)
+                           data_shape <- lapply(data_shape, function(df) {
+                               n <- n_shape(df$shape[1])
+                               phase <- phase_shape(df$shape[1])
+                               regular_polygon_data(df, n = n, phase = phase)
+                             })
+                           do.call(rbind, data_shape)
+                         },
                          draw_panel = function(data, panel_params, coord, ...) {
                            #browser()
                             n <- nrow(data)
                             if(n==0) {
                               return(zeroGrob())
                             }
+                            #browser()
                             munched <- coord_munch(coord, data, panel_params)
                             munched <- munched[order(munched$group), ]
                             if (!is.integer(munched$group)) {

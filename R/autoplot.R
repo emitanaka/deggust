@@ -90,21 +90,29 @@ autoplot.edbl_table <- function(.edibble, width = NULL, height = NULL) {
     edges <- data.frame(from = unit_vec[-1],
                         to = unit_vec[-length(unit_vec)])
     nodes <- .edibble[c(unit_names, setdiff(names(.edibble), unit_names))]
-    graph <- igraph::graph_from_data_frame(edges,
-                                           vertices = edibble:::as_data_frame(nodes))
-    plot <- ggraph::ggraph(graph,
-                   layout = "manual",
-                   x = rep(1:unit_dims[1], length.out = nlevels_unit),
-                   y = sort(rep(1:unit_dims[2], length.out = nlevels_unit))) +
-      ggraph::geom_edge_diagonal() +
-      # assumes one trt only
-      ggraph::geom_node_circle(ggplot2::aes_string(r = 0.3, fill = trt_names)) +
-      #ggraph::geom_node_tile(width = 0.8, height = 0.8, aes_string(fill = trt_names)) +
-      ggraph::geom_node_text(aes(label =  unit_vec)) +
-      ggplot2::coord_equal()
+    nodes <- edibble:::as_data_frame(nodes)
+    nodes$x <- rep(1:unit_dims[1], length.out = nlevels_unit)
+    nodes$y <- sort(rep(1:unit_dims[2], length.out = nlevels_unit))
+    plot <- ggplot(nodes, aes(x, y)) +
+      geom_node_shape(aes(fill = !!parse_expr(trt_names)), shape = "circle") +
+      theme(axis.ticks.length = grid::unit(0, "npc"),
+            panel.grid = element_blank(),
+            axis.title = element_blank(),
+            axis.text = element_blank())
+    # plot <- ggraph::ggraph(graph,
+    #                layout = "manual",
+    #                x = rep(1:unit_dims[1], length.out = nlevels_unit),
+    #                y = sort(rep(1:unit_dims[2], length.out = nlevels_unit))) +
+    #   ggraph::geom_edge_diagonal() +
+    #   # assumes one trt only
+    #   geom_node_shape(aes(shape = "circle", fill = !!parse_expr(trt_names))) +
+    #   #ggraph::geom_node_circle(ggplot2::aes_string(r = 0.3, fill = trt_names)) +
+    #   #ggraph::geom_node_tile(width = 0.8, height = 0.8, aes_string(fill = trt_names)) +
+    #   ggraph::geom_node_text(aes(label =  unit_vec)) +
+    #   ggplot2::coord_equal()
 
-    plot <- addGeomClass(plot, identify_layer(plot, "geom", "GeomCircle"), "GeomUnit")
-    addGeomClass(plot, identify_layer(plot, "geom", "GeomText"), "GeomUnitText")
+    addGeomClass(plot, identify_layer(plot, "geom", "GeomNodeShape"), "GeomUnit")
+    #addGeomClass(plot, identify_layer(plot, "geom", "GeomText"), "GeomUnitText")
 
   } else if(nunits==2) {
     # make it two-dimensional

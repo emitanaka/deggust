@@ -20,7 +20,6 @@ ggplot_add.degg_unit <- function(object, plot, object_name) {
     unit_layer <- plot$layers[[ilayer]]
     width <- object$width %||% 0.5
     height <- object$height %||% 0.5
-    r <- object$r %||% 0.3
     plot$layers[[ilayer]] <- switch(object$shape,
                                     "box" = ,
                                     "rect" = ,
@@ -35,13 +34,15 @@ ggplot_add.degg_unit <- function(object, plot, object_name) {
                                     "septagon" = ,
                                     "octagon" = ,
                                     "ellipse" = ,
-                                    "triangle" = geom_node_shape(aes(x = !!unit_layer$mapping$x0,
+                                    "triangle" = geom_node_shape(shape = object$shape, phase = object$phase,
+                                                                 aes(fill = !!unit_layer$mapping$fill)),
+                                    "doubleellipse" = geom_node_double_shape(aes(x = !!unit_layer$mapping$x0,
                                                                      y = !!unit_layer$mapping$y0,
                                                                      width = width, height = height,
                                                                      fill = !!unit_layer$mapping$fill,
                                                                      shape = object$shape, phase = object$phase)),
 
-                                    "circle" = geom_node_circle(aes(r = r,
+                                    "circle" = ggraph::geom_node_circle(aes(r = r,
                                                                     fill =  !!unit_layer$mapping$fill)),
                                     "none" = NULL)
     plot <- addGeomClass(plot, ilayer, "GeomUnit")

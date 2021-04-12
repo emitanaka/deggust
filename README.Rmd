@@ -41,7 +41,6 @@ devtools::install_github("emitanaka/deggust")
 library(ggplot2)
 library(edibble)
 library(deggust)
-
 ```
 
 
