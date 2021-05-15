@@ -49,21 +49,23 @@ autoplot(unit1)
 Easy to replace the unit shape:
 
 ``` r
-autoplot(unit1) + restyle_units(shape = "box")
+autoplot(unit1, shape = "box")
 ```
 
 ![](man/figures/README-unnamed-chunk-4-1.png)<!-- -->
 
 ``` r
-autoplot(unit1) + restyle_units(shape = "triangle")
+autoplot(unit1, shape = "triangle")
 ```
 
 ![](man/figures/README-unnamed-chunk-5-1.png)<!-- -->
 
 ``` r
-autoplot(unit1) + 
-  restyle_units(shape = "hexagon") +
-  restyle_labels(size = 6, color = "gray", fontface = "bold")
+autoplot(unit1, shape = "hexagon",
+         text = element_text(size = 6, 
+                             color = "gray",
+                             face = "bold")) 
+#> Warning: Ignoring unknown parameters: inherit.blank
 ```
 
 ![](man/figures/README-unnamed-chunk-6-1.png)<!-- -->
@@ -99,6 +101,6 @@ autoplot(rcbd, view = "low")
 
 ## Related work
 
-  - `desplot` for visualising designs
-  - `ExploreModelMatrix` for exploring design matrix
-  - `ez` for easy analysis and visualization of factorial experiments
+-   `desplot` for visualising designs
+-   `ExploreModelMatrix` for exploring design matrix
+-   `ez` for easy analysis and visualization of factorial experiments

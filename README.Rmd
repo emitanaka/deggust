@@ -60,17 +60,18 @@ autoplot(unit1)
 Easy to replace the unit shape:
 
 ```{r}
-autoplot(unit1) + restyle_units(shape = "box")
+autoplot(unit1, shape = "box")
 ```
 
 ```{r}
-autoplot(unit1) + restyle_units(shape = "triangle")
+autoplot(unit1, shape = "triangle")
 ```
 
 ```{r}
-autoplot(unit1) + 
-  restyle_units(shape = "hexagon") +
-  restyle_labels(size = 6, color = "gray", fontface = "bold")
+autoplot(unit1, shape = "hexagon",
+         text = element_text(size = 6, 
+                             color = "gray",
+                             face = "bold")) 
 ```
 
 
