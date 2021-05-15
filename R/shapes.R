@@ -11,11 +11,6 @@ geom_node_shape <- function(mapping = NULL, data = NULL, position = "identity",
 
 }
 
-custom_polygon_shape <- function(data, scales, ...) {
-  UseMethod("custom_polygon_shape")
-}
-
-
 regular_polygon <- function(n = 5, phase = 0, radius = 1){
   stopifnot(n > 2)
   angle <- 2 * pi / n
@@ -35,8 +30,6 @@ regular_polygon_data <- function(data, n = 5, phase = 0, suffix = 0) {
 }
 
 # shapes inspired by https://graphviz.org/doc/info/shapes.html
-
-
 n_shape <- function(shape) {
   switch(shape,
          "triangle"  = 3,
