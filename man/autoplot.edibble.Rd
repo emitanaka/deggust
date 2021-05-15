@@ -11,7 +11,7 @@
 
 \method{autoplot}{edbl_graph}(.edibble, view = c("high", "low"), ..., main = NULL)
 
-\method{autoplot}{edbl_table}(.edibble, width = NULL, height = NULL)
+\method{autoplot}{edbl_table}(.edibble, width = NULL, height = NULL, shape = "circle", text = FALSE)
 }
 \arguments{
 \item{.edibble}{An edibble desgin, an edibble table or an edibble graph.}

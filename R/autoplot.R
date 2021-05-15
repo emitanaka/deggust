@@ -110,14 +110,8 @@ autoplot.edbl_table <- function(.edibble, width = NULL, height = NULL,
     if(isTRUE(text) || inherits(text, "element_text")) {
       text_aes <- list()
       if(inherits(text, "element_text")) {
-        text_aes <- as.list(c(family = if(!is.null(text$family)) text$family,
-                              fontface = if(!is.null(text$face))  text$face,
-                         color = if(!is.null(text$colour)) text$colour,
-                         size = if(!is.null(text$size))  text$size,
-                         hjust = if(!is.null(text$hjust)) text$hjust,
-                         vjust = if(!is.null(text$vjust)) text$vjust,
-                         angle = if(!is.null(text$angle)) text$angle,
-                         lineheight = if(!is.null(text$lineheight)) text$lineheight))
+        text_aes <- remove_nulls(as.list(text))
+        names(text_aes) <- gsub("face", "fontface", names(text_aes))
       }
       plot <- plot +
         do.call("geom_text", c(list(mapping = aes(label = unit_vec)),
