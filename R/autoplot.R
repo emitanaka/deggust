@@ -65,13 +65,14 @@ autoplot.edbl_graph <- function(.edibble, view = c("high", "low"),
 #' @rdname autoplot.edibble
 #' @importFrom edibble is_edibble get_edibble_design
 #' @export
-autoplot.edbl_table <- function(.edibble, width = NULL, height = NULL) {
+autoplot.edbl_table <- function(.edibble, width = NULL, height = NULL,
+                                shape = "circle", text = FALSE) {
   if(!is_edibble(.edibble)) {
     abort("Don't know how to plot an edibble table with no design.")
   }
 
-  width <- width %||% 12
-  height <- height %||% 9
+  width <- width %||% 6
+  height <- height %||% 6
   wratio <- width / (width + height)
 
   ind_units <- unlist(lapply(.edibble, is_edibble_unit))
@@ -85,20 +86,44 @@ autoplot.edbl_table <- function(.edibble, width = NULL, height = NULL) {
   if(nunits==1) {
     # make it snake-like
     nlevels_unit <- nrow(.edibble)
-    unit_dims <- c(round(sqrt(nlevels_unit)), round(sqrt(nlevels_unit))) # y vs. x
+    w <- ceiling(sqrt(nlevels_unit / wratio))
+    h <- ceiling(w * wratio)
     unit_vec <- .edibble[[unit_names]]
+    # [FIXME] assumes edge structure instead of using from graph object
     edges <- data.frame(from = unit_vec[-1],
                         to = unit_vec[-length(unit_vec)])
     nodes <- .edibble[c(unit_names, setdiff(names(.edibble), unit_names))]
     nodes <- edibble:::as_data_frame(nodes)
-    nodes$x <- rep(1:unit_dims[1], length.out = nlevels_unit)
-    nodes$y <- sort(rep(1:unit_dims[2], length.out = nlevels_unit))
+    M <- matrix(ncol = w, nrow = h)
+    R <- row(M)
+    # swap dirction every odd row
+    R[, c(FALSE, TRUE)] <- R[nrow(R):1, c(FALSE, TRUE)]
+    nodes$x <- as.vector(R)[1:nlevels_unit]
+    nodes$y <- as.vector(col(M))[1:nlevels_unit]
     plot <- ggplot(nodes, aes(x, y)) +
-      geom_node_shape(aes(fill = !!parse_expr(trt_names)), shape = "circle") +
+      geom_path() +
+      geom_node_shape(aes(fill = !!parse_expr(trt_names)), shape = shape) +
       theme(axis.ticks.length = grid::unit(0, "npc"),
             panel.grid = element_blank(),
             axis.title = element_blank(),
             axis.text = element_blank())
+    if(isTRUE(text) || inherits(text, "element_text")) {
+      text_aes <- list()
+      if(inherits(text, "element_text")) {
+        text_aes <- as.list(c(family = if(!is.null(text$family)) text$family,
+                              fontface = if(!is.null(text$face))  text$face,
+                         color = if(!is.null(text$colour)) text$colour,
+                         size = if(!is.null(text$size))  text$size,
+                         hjust = if(!is.null(text$hjust)) text$hjust,
+                         vjust = if(!is.null(text$vjust)) text$vjust,
+                         angle = if(!is.null(text$angle)) text$angle,
+                         lineheight = if(!is.null(text$lineheight)) text$lineheight))
+      }
+      plot <- plot +
+        do.call("geom_text", c(list(mapping = aes(label = unit_vec)),
+                               text_aes))
+    }
+    plot
     # plot <- ggraph::ggraph(graph,
     #                layout = "manual",
     #                x = rep(1:unit_dims[1], length.out = nlevels_unit),
@@ -111,7 +136,7 @@ autoplot.edbl_table <- function(.edibble, width = NULL, height = NULL) {
     #   ggraph::geom_node_text(aes(label =  unit_vec)) +
     #   ggplot2::coord_equal()
 
-    addGeomClass(plot, identify_layer(plot, "geom", "GeomNodeShape"), "GeomUnit")
+    #addGeomClass(plot, identify_layer(plot, "geom", "GeomNodeShape"), "GeomUnit")
     #addGeomClass(plot, identify_layer(plot, "geom", "GeomText"), "GeomUnitText")
 
   } else if(nunits==2) {
