@@ -2,9 +2,9 @@
 
 #' @export
 geom_unit_node <- function(mapping = NULL, data = NULL, position = "identity",
-                            shape = "circle",
+                            shape = "circle", stat = "identity",
                             show.legend = NA, inherit.aes = TRUE, ...) {
-  layer(data = data, mapping = mapping, stat = StatUnitNode,
+  layer(data = data, mapping = mapping, stat = stat,
         geom = GeomNodeShape, position = position, show.legend = show.legend,
         inherit.aes = inherit.aes, params = list(na.rm = FALSE, shape = shape, ...))
 
