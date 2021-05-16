@@ -68,7 +68,8 @@ GeomNodeShape <- ggproto("GeomNodeShape", Geom,
                          draw_key = draw_key_shape,
                          default_aes = aes(colour = "black",
                                            lwd = 1, lty = "solid",
-                                           alpha = 1, fill = "white"),
+                                           alpha = 1, fill = "white",
+                                           width = NULL, height = NULL),
                          setup_data = function(data, params) {
                            data$width <- data$width %||% params$width %||% resolution(data$x, FALSE) * 0.8
                            data$height <- data$height %||% params$height %||% resolution(data$y, FALSE) * 0.8
