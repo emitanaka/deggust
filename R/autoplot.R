@@ -65,44 +65,51 @@ autoplot.edbl_graph <- function(.edibble, view = c("high", "low"),
 #' @rdname autoplot.edibble
 #' @importFrom edibble is_edibble get_edibble_design
 #' @export
-autoplot.edbl_table <- function(.edibble, width = NULL, height = NULL,
-                                shape = "circle", text = FALSE) {
+autoplot.edbl_table <- function(.edibble, aspect_ratio = 1,
+                                shape = "circle", text = FALSE, image = NULL,
+                                trts = NULL, scales = NULL) {
   if(!is_edibble(.edibble)) {
     abort("Don't know how to plot an edibble table with no design.")
   }
-
-  width <- width %||% 6
-  height <- height %||% 6
-  wratio <- width / (width + height)
 
   ind_units <- unlist(lapply(.edibble, is_edibble_unit))
   unit_names <- names(ind_units)[ind_units]
   nunits <- sum(ind_units)
 
   ind_trts <- unlist(lapply(.edibble, is_edibble_trt))
-  trt_names <- names(ind_trts)[ind_trts]
-  ntrts <- sum(ind_trts)
+  trt_names <- trts %||% names(ind_trts)[ind_trts]
+  ntrts <- length(trt_names)
+
+  scales <- scales %||% lapply(1:ntrts, function(x) ggplot2::scale_fill_discrete())
+
+  nlevels_unit <- nrow(.edibble)
 
   if(nunits==1) {
     # make it snake-like
-    nlevels_unit <- nrow(.edibble)
-    w <- ceiling(sqrt(nlevels_unit / wratio))
-    h <- ceiling(w * wratio)
     unit_vec <- .edibble[[unit_names]]
-    # [FIXME] assumes edge structure instead of using from graph object
-    edges <- data.frame(from = unit_vec[-1],
-                        to = unit_vec[-length(unit_vec)])
     nodes <- .edibble[c(unit_names, setdiff(names(.edibble), unit_names))]
-    nodes <- edibble:::as_data_frame(nodes)
-    M <- matrix(ncol = w, nrow = h)
-    R <- row(M)
-    # swap dirction every odd row
-    R[, c(FALSE, TRUE)] <- R[nrow(R):1, c(FALSE, TRUE)]
-    nodes$x <- as.vector(R)[1:nlevels_unit]
-    nodes$y <- as.vector(col(M))[1:nlevels_unit]
+    nodes <- as_data_frame(nodes)
+    nodes <- cbind(nodes, coord_snake(nlevels_unit, aspect_ratio))
     plot <- ggplot(nodes, aes(x, y)) +
-      geom_path() +
-      geom_node_shape(aes(fill = !!parse_expr(trt_names)), shape = shape) +
+      geom_path()
+    if(is.null(image)) {
+        plot <- plot + geom_unit_node(aes(fill = !!parse_expr(trt_names[1])), shape = shape)
+    } else {
+      if(!require("ggimage")) {
+        stop("Please install `ggimage` package to use the image argument.")
+      }
+      plot <- plot + ggimage::geom_image(aes(color = !!parse_expr(trt_names[1])), image = image, size = 0.15)
+    }
+    if(ntrts > 1) {
+      plot <- another_fill_scale(plot, 2, scales, trt_names, shape = shape, image = image,
+                                 height = 0.6, width = 0.6, size = 0.08)
+      if(ntrts > 2) {
+        plot <- another_fill_scale(plot, 3, scales, trt_names, shape = shape, image = image,
+                                   height = 0.4, width = 0.4, size = 0.05)
+      }
+    }
+
+    plot <- plot +
       theme(axis.ticks.length = grid::unit(0, "npc"),
             panel.grid = element_blank(),
             axis.title = element_blank(),
@@ -117,46 +124,55 @@ autoplot.edbl_table <- function(.edibble, width = NULL, height = NULL,
         do.call("geom_text", c(list(mapping = aes(label = unit_vec)),
                                text_aes))
     }
-    plot
-    # plot <- ggraph::ggraph(graph,
-    #                layout = "manual",
-    #                x = rep(1:unit_dims[1], length.out = nlevels_unit),
-    #                y = sort(rep(1:unit_dims[2], length.out = nlevels_unit))) +
-    #   ggraph::geom_edge_diagonal() +
-    #   # assumes one trt only
-    #   geom_node_shape(aes(shape = "circle", fill = !!parse_expr(trt_names))) +
-    #   #ggraph::geom_node_circle(ggplot2::aes_string(r = 0.3, fill = trt_names)) +
-    #   #ggraph::geom_node_tile(width = 0.8, height = 0.8, aes_string(fill = trt_names)) +
-    #   ggraph::geom_node_text(aes(label =  unit_vec)) +
-    #   ggplot2::coord_equal()
-
-    #addGeomClass(plot, identify_layer(plot, "geom", "GeomNodeShape"), "GeomUnit")
-    #addGeomClass(plot, identify_layer(plot, "geom", "GeomText"), "GeomUnitText")
-
-  } else if(nunits==2) {
+  } else if(nunits==2 & ntrts==1) {
     # make it two-dimensional
     unames <- unit_names(.edibble)
     nlevels_units <- unlist(lapply(.edibble[unames], nlevels))
-    unit_dims <- c(min(nlevels_units), max(nlevels_units))
     unit_name <- unames[which.max(nlevels_units)]
+    parent_name <- setdiff(unames, unit_name)
     unit_vec <- .edibble[[unit_name]]
-    edges <- data.frame(from = unit_vec[-1],
-                        to = unit_vec[-length(unit_vec)]) %>%
-      unique()
-    nodes <- .edibble[c(unit_name, setdiff(names(.edibble), unit_name))]
-    graph <- igraph::graph_from_data_frame(edges,
-                                           vertices = edibble:::as_data_frame(nodes))
-    ggraph::ggraph(graph,
-                   layout = "manual",
-                   x = as.integer(nodes[[unit_name]]),
-                   y = as.integer(nodes[[setdiff(unames, unit_name)]])) +
-      ggraph::geom_edge_diagonal() +
-      # assumes one trt only
-      ggraph::geom_node_circle(ggplot2::aes_string(r = 0.3, fill = trt_names)) +
-      ggraph::geom_node_text(aes(label =  unit_vec))
+
+    nodes <- .edibble[c(unit_names, setdiff(names(.edibble), unit_names))]
+    nodes <- as_data_frame(nodes)
+
+    tt <- vapply(split(nodes, nodes[unames[1]]), nrow, numeric(1))
+    nodes$xnames <- names_to_nesting_names(.edibble, paste0(unames[2], ":", nodes[[unames[2]]]))
+
+    #if(max(tt) <= w) {
+      nodes$x <- as.numeric(as.factor(nodes$xnames))
+      nodes$y <- as.numeric(factor(nodes[[parent_name]],
+                                   levels = unique(nodes[[parent_name]])))
+      block_data <- data.frame(x = (max(nodes$x) + 1)/2,
+                               y =  (1:max(nodes$y)),
+                               height = 1.6)
+    #} else {
+
+    #}
+
+    plot <- ggplot(nodes, aes(x = x, y = y)) +
+      geom_unit_node(data = block_data,
+                     shape = "box", aes(width = max(nodes$x) * 2, height = height)) +
+      geom_path(aes(group = !!parse_expr(parent_name))) +
+      geom_unit_node(aes(fill = !!parse_expr(trt_names)), shape = shape) +
+      theme(axis.ticks.length = grid::unit(0, "npc"),
+            panel.grid = element_blank(),
+            axis.title = element_blank(),
+            axis.text = element_blank())
+    if(isTRUE(text) || inherits(text, "element_text")) {
+      text_aes <- list()
+      if(inherits(text, "element_text")) {
+        text_aes <- remove_nulls(as.list(text))
+        names(text_aes) <- gsub("face", "fontface", names(text_aes))
+      }
+      plot <- plot +
+        do.call("geom_text", c(list(mapping = aes(label = unit_vec)),
+                               text_aes))
+    }
+  } else if(nunits==1 && ntrts==2) {
 
   }
 
+  plot
 }
 
 is_edibble_unit <- function(x) {

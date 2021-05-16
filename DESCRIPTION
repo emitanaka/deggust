@@ -28,5 +28,6 @@ Remotes: emitanaka/edibble
 Suggests: 
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    ggimage
 VignetteBuilder: knitr
