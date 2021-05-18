@@ -98,7 +98,7 @@ autoplot.edbl_table <- function(.edibble, aspect_ratio = 1,
       if(!require("ggimage")) {
         stop("Please install `ggimage` package to use the image argument.")
       }
-      plot <- plot + ggimage::geom_image(aes(color = !!parse_expr(trt_names[1])), image = image, size = 0.15)
+      plot <- plot + ggimage::geom_image(aes(color = !!parse_expr(trt_names[1])), image = image, size = 0.1)
     }
     if(ntrts > 1) {
       plot <- another_fill_scale(plot, 2, scales, trt_names, shape = shape, image = image,
