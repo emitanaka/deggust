@@ -168,10 +168,7 @@ autoplot.edbl_table <- function(.edibble, aspect_ratio = 1,
         do.call("geom_text", c(list(mapping = aes(label = unit_vec)),
                                text_aes))
     }
-  } else if(nunits==1 && ntrts==2) {
-
   }
-
   plot
 }
 
