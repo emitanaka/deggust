@@ -2,22 +2,17 @@
 % Please edit documentation in R/autoplot.R
 \name{autoplot.edibble}
 \alias{autoplot.edibble}
-\alias{autoplot.EdibbleDesign}
-\alias{autoplot.edbl_graph}
 \alias{autoplot.edbl_table}
 \title{Auto plot or \code{ggplot2} of an edibble design}
 \usage{
-\method{autoplot}{EdibbleDesign}(.edibble, view = c("high", "low"), ..., main = NULL)
-
-\method{autoplot}{edbl_graph}(.edibble, view = c("high", "low"), ..., main = NULL)
-
 \method{autoplot}{edbl_table}(
   .edibble,
   aspect_ratio = 1,
   shape = "circle",
   text = FALSE,
   image = NULL,
-  trts = NULL
+  trts = NULL,
+  scales = NULL
 )
 }
 \arguments{
@@ -26,9 +21,9 @@
 \item{view}{A string specifying the level of the view ("high" or "low") to plot.
 By default it is "high".}
 
-\item{...}{Additional parameters passed to \code{plot.igraph}.}
+\item{...}{Unused at the moment.}
 
-\item{main}{The title of the plot. By default it is the
+\item{title}{The title of the plot. By default it is the
 name of the edibble design.}
 }
 \value{
@@ -37,6 +32,38 @@ A \code{ggraph} and \code{ggplot} object.
 \description{
 This plot produces the same type of plot using the \code{plot} functions in
 \code{edibble} package except the plots are \code{ggplot}
+
+#' @rdname autoplot.edibble
+#' @importFrom edibble subset_vars subset_levels
+#' @importFrom ggplot2 aes scale_color_manual ggtitle
+#' @importFrom ggraph ggraph label_rect geom_edge_link geom_node_point circle geom_node_text
+#' @importFrom grid arrow unit
+#' @export
+autoplot.edbl_graph <- function(.edibble, view = c("high", "low"),
+..., main = NULL) {
+main <- main \%||\% "An edibble design"
+view <- match.arg(view)
+out <- switch(view,
+high = subset_vars(.edibble),
+low = subset_levels(.edibble))
+g <- ggraph(out) +
+geom_edge_link(arrow = arrow(length = unit(4, 'mm')),
+aes(start_cap = label_rect(node1.name),
+end_cap = label_rect(node2.name),
+## this is fine when loading
+## but get object "etype" not found error
+# linetype = edge_ltype_dict\link{etype}
+)) +
+geom_node_text(aes(label = label, color = class)) +
+scale_color_manual(name = "Variable Type",
+breaks = c("edbl_trt", "edbl_unit", "edbl_rcrd"),
+labels = c("Treatment", "Unit", "Record"),
+values = c(deggust_opt("vertex.label.color.unit"),
+deggust_opt("vertex.label.color.trt"),
+deggust_opt("vertex.label.color.rcrd"))) +
+ggtitle(main)
+g
+}
 }
 \seealso{
 See \code{\link[edibble]{plot.edibble}} for the base plot version of this plot.
