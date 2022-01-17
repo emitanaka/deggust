@@ -6,21 +6,43 @@
 \usage{
 \method{autoplot}{edbl_table}(
   .edibble,
+  title = NULL,
   aspect_ratio = 1,
   shape = "circle",
   text = FALSE,
   image = NULL,
-  trts = NULL,
-  scales = NULL
+  fill = NULL,
+  scales = NULL,
+  horizontal = TRUE
 )
 }
 \arguments{
 \item{.edibble}{An edibble desgin, an edibble table or an edibble graph.}
 
-\item{...}{Unused at the moment.}
-
 \item{title}{The title of the plot. By default it is the
-name of the edibble design.}
+name of the edibble design if available.}
+
+\item{aspect_ratio}{The aspect ratio of the graph.}
+
+\item{shape}{The shape of the unit.}
+
+\item{text}{A logical value of whether to show the text or not. Alternatively,
+it can be a \code{ggplot2::element_text()} object to customise other elements of text,
+e.g., size, font, font face, color, etc.}
+
+\item{image}{An image to use instead of \code{shape}. The file path to the image should be
+supplied. If an \code{image} is supplied, \code{shape} is ingored.}
+
+\item{fill}{A character vector of variable names to display. Only a maximum of three
+variables are allowed. Currently, it's assumed that the the variables are discrete.
+In general, it's assumed that the variables are treatment variables.}
+
+\item{scales}{A list of scales to use for the \code{fill}.}
+
+\item{horizontal}{A logical value indicating whether the display should be
+optimized for horizontal display (default) or vertical display. Not yet implemented.}
+
+\item{...}{Unused at the moment.}
 }
 \value{
 A \code{ggplot} object.

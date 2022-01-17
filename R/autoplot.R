@@ -7,19 +7,32 @@
 #' @param .edibble An edibble desgin, an edibble table or an edibble graph.
 #' @param ... Unused at the moment.
 #' @param title The title of the plot. By default it is the
-#'  name of the edibble design.
+#'  name of the edibble design if available.
+#' @param aspect_ratio The aspect ratio of the graph.
+#' @param shape The shape of the unit.
+#' @param text A logical value of whether to show the text or not. Alternatively,
+#'   it can be a `ggplot2::element_text()` object to customise other elements of text,
+#'   e.g., size, font, font face, color, etc.
+#' @param image An image to use instead of `shape`. The file path to the image should be
+#'   supplied. If an `image` is supplied, `shape` is ingored.
+#' @param fill A character vector of variable names to display. Only a maximum of three
+#'   variables are allowed. Currently, it's assumed that the the variables are discrete.
+#'   In general, it's assumed that the variables are treatment variables.
+#' @param scales A list of scales to use for the `fill`.
+#' @param horizontal A logical value indicating whether the display should be
+#'  optimized for horizontal display (default) or vertical display. Not yet implemented.
 #' @return A `ggplot` object.
 #' @export
-autoplot.edbl_table <- function(.edibble, aspect_ratio = 1,
+autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
                                 shape = "circle", text = FALSE, image = NULL,
-                                trts = NULL, scales = NULL) {
+                                fill = NULL, scales = NULL, horizontal = TRUE) {
 
   ind_units <- unlist(lapply(.edibble, is_edibble_unit))
   unit_names <- names(ind_units)[ind_units]
   nunits <- sum(ind_units)
 
   ind_trts <- unlist(lapply(.edibble, is_edibble_trt))
-  trt_names <- trts %||% names(ind_trts)[ind_trts]
+  trt_names <- fill %||% names(ind_trts)[ind_trts]
   ntrts <- length(trt_names)
 
   scales <- scales %||% lapply(1:ntrts, function(x) ggplot2::scale_fill_discrete())
@@ -29,13 +42,14 @@ autoplot.edbl_table <- function(.edibble, aspect_ratio = 1,
   des <- edbl_design(.edibble)
   obsid <- fct_obs_unit(des)
   parentids <- intersect(fct_parent(des, obsid), unit_ids(des))
+  title <- title %||% des$name
 
   if(nunits==1) {
-    plot <- plot_single_unit(.edibble, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio)
+    plot <- plot_single_unit(.edibble, title, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio)
   } else if(nunits==2 & ntrts==1) {
-    plot <- plot_two_units(.edibble, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio)
+    plot <- plot_two_units(.edibble, title, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio)
   } else if(nunits==3 & length(parentids)==2 & ntrts==1) {
-    plot <- plot_three_units(.edibble, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio,
+    plot <- plot_three_units(.edibble, title, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio,
                              obsid, parentids)
   } else {
     abort("`autoplot` is not yet supported for this design.")
@@ -43,7 +57,7 @@ autoplot.edbl_table <- function(.edibble, aspect_ratio = 1,
   plot
 }
 
-plot_three_units <- function(.edibble, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio,
+plot_three_units <- function(.edibble, title, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio,
                            obsid, parentids) {
   des <- edbl_design(.edibble)
   vlevs <- fct_levels(des)
@@ -54,12 +68,12 @@ plot_three_units <- function(.edibble, nlevels_unit, ntrts, unit_names, trt_name
   ggplot(.edibble, aes(!!parse_expr(parent1), !!parse_expr(parent2), fill = !!parse_expr(trt_names))) +
     geom_tile(color = "black", size = 2) +
     theme(axis.ticks.length = grid::unit(0, "npc"),
-          panel.grid = element_blank())
+          panel.grid = element_blank()) + ggtitle(title)
 
 
 }
 
-plot_two_units <- function(.edibble, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio) {
+plot_two_units <- function(.edibble, title, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio) {
   # make it two-dimensional
   ind_units <- unlist(lapply(.edibble, is_edibble_unit))
   unames <- names(ind_units)[ind_units]
@@ -106,10 +120,10 @@ plot_two_units <- function(.edibble, nlevels_unit, ntrts, unit_names, trt_names,
       do.call("geom_text", c(list(mapping = aes(label = unit_vec)),
                              text_aes))
   }
-  plot
+  plot + ggtitle(title)
 }
 
-plot_single_unit <- function(.edibble, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio) {
+plot_single_unit <- function(.edibble, title, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio) {
   # make it snake-like
   unit_vec <- .edibble[[unit_names]]
   nodes <- .edibble[c(unit_names, setdiff(names(.edibble), unit_names))]
@@ -148,7 +162,7 @@ plot_single_unit <- function(.edibble, nlevels_unit, ntrts, unit_names, trt_name
       do.call("geom_text", c(list(mapping = aes(label = unit_vec)),
                              text_aes))
   }
-  plot
+  plot + ggtitle(title)
 }
 
 is_edibble_unit <- function(x) {
