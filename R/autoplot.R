@@ -61,7 +61,7 @@ plot_three_units <- function(.edibble, title, nlevels_unit, ntrts, unit_names, t
                            obsid, parentids) {
   des <- edbl_design(.edibble)
   vlevs <- fct_levels(des)
-  parent_labels <- fct_label(des, parentids)
+  parent_labels <- fct_names(des, parentids)
   parent1 <- parent_labels[which.max(lengths(vlevs[parent_labels]))]
   parent2 <- setdiff(parent_labels, parent1)
 
