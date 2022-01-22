@@ -1,6 +1,9 @@
 
 
 
+#' @export
+ggplot2::autoplot
+
 #' Auto plot or `ggplot2` of an edibble design
 #'
 #'
