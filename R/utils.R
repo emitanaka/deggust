@@ -36,7 +36,7 @@ coord_snake <- function(n, aspect_ratio, swap = TRUE) {
 
 another_fill_scale <- function(plot, i, scales, trt_names, shape = NULL, image = NULL, height = NA, width = NA, size = NA) {
   plot <- plot +
-    scales[[i - 1]] +
+    scales +
     ggnewscale::new_scale_fill()
   if(is.null(image)) {
     plot <- plot + geom_unit_node(aes(fill = !!parse_expr(trt_names[i])), shape = shape, height = height, width = width)

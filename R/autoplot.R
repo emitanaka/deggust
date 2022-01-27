@@ -21,14 +21,13 @@ ggplot2::autoplot
 #' @param fill A character vector of variable names to display. Only a maximum of three
 #'   variables are allowed. Currently, it's assumed that the the variables are discrete.
 #'   In general, it's assumed that the variables are treatment variables.
-#' @param scales A list of scales to use for the `fill`.
 #' @param horizontal A logical value indicating whether the display should be
 #'  optimized for horizontal display (default) or vertical display. Not yet implemented.
 #' @return A `ggplot` object.
 #' @export
 autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
                                 shape = "circle", text = FALSE, image = NULL,
-                                fill = NULL, scales = NULL, horizontal = TRUE) {
+                                fill = NULL, horizontal = TRUE) {
 
   ind_units <- unlist(lapply(.edibble, is_edibble_unit))
   unit_names <- names(ind_units)[ind_units]
@@ -38,7 +37,6 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
   trt_names <- fill %||% names(ind_trts)[ind_trts]
   ntrts <- length(trt_names)
 
-  scales <- scales %||% lapply(1:ntrts, function(x) ggplot2::scale_fill_discrete())
 
   nlevels_unit <- nrow(.edibble)
 
@@ -48,7 +46,7 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
   title <- title %||% des$name
 
   if(nunits==1) {
-    plot <- plot_single_unit(.edibble, title, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio, scales)
+    plot <- plot_single_unit(.edibble, title, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio)
   } else if(nunits==2 & ntrts==1) {
     plot <- plot_two_units(.edibble, title, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio)
   } else if(nunits==3 & length(parentids)==2 & ntrts==1) {
