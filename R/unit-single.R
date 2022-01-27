@@ -26,10 +26,8 @@ plot_single_unit <- function(.edibble, title, nlevels_unit, ntrts, unit_names, t
   }
 
   plot <- plot +
-    theme(axis.ticks.length = grid::unit(0, "npc"),
-          panel.grid = element_blank(),
-          axis.title = element_blank(),
-          axis.text = element_blank())
+    theme_void() +
+    theme(plot.margin = margin(5, 5, 5, 5))
   if(isTRUE(text) || inherits(text, "element_text")) {
     text_aes <- list()
     if(inherits(text, "element_text")) {
