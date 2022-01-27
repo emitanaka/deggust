@@ -34,17 +34,8 @@ coord_snake <- function(n, aspect_ratio, swap = TRUE) {
 #   plot
 # }
 
-another_fill_scale <- function(plot, i, scales, trt_names, shape = NULL, image = NULL, height = NA, width = NA, size = NA) {
-  plot <- plot +
-    scales +
-    ggnewscale::new_scale_fill()
-  if(is.null(image)) {
-    plot <- plot + geom_unit_node(aes(fill = !!parse_expr(trt_names[i])), shape = shape, height = height, width = width)
-  } else {
-    if(!require("ggimage")) {
-      stop("Please install `ggimage` package to use the image argument.")
-    }
-    plot <- plot + ggimage::geom_image(aes(color = !!parse_expr(trt_names[i])), image = image, size = size)
-  }
+another_fill_scale <- function(plot, i, flist, shape = NULL, image = NULL, height = NA, width = NA, size = NA) {
+  plot <- plot + ggnewscale::new_scale_fill()
+  plot <- add_unit(plot, flist, shape, image, height = height, width = width, size = size)
   plot
 }
