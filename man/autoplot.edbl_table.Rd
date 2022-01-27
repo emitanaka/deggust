@@ -12,6 +12,7 @@
   text = FALSE,
   image = NULL,
   fill = NULL,
+  node = NULL,
   horizontal = TRUE
 )
 }
@@ -35,6 +36,9 @@ supplied. If an \code{image} is supplied, \code{shape} is ingored.}
 \item{fill}{A character vector of variable names to display. Only a maximum of three
 variables are allowed. Currently, it's assumed that the the variables are discrete.
 In general, it's assumed that the variables are treatment variables.}
+
+\item{node}{A character vector of variable names. It's assumed that the variables
+are units.}
 
 \item{horizontal}{A logical value indicating whether the display should be
 optimized for horizontal display (default) or vertical display. Not yet implemented.}

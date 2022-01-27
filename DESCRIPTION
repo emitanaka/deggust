@@ -22,7 +22,8 @@ Imports:
     grid,
     magick,
     edibble,
-    ggnewscale
+    ggnewscale,
+    colorspace
 URL: http://deggust.emitanaka.org, https://github.com/emitanaka/deggust
 BugReports: https://github.com/emitanaka/deggust/issues
 Remotes: emitanaka/edibble

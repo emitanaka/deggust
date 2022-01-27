@@ -40,8 +40,8 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
                 rcrds = rnames,
                 fill = fill %||% tnames,
                 node = node %||% unames)
-  shapes <- rep(shape, length.out = length(flist$fill))
-  images <- rep(image %||% NA, length.out = length(flist$fill))
+  shapes <- rep(shape, length.out = min(length(flist$fill), 3))
+  images <- rep(image %||% NA, length.out = min(length(flist$fill), 3))
   nnodes <- length(flist$node)
   nfill <- length(flist$fill)
   obsid <- fct_obs_unit(des)
@@ -49,17 +49,24 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
   title <- title %||% des$name
 
   if(nnodes==1) {
+    # snake-like plot
     plot <- plot_single_unit(.edibble, flist, shapes, images, text, aspect_ratio)
-  } else if(nnodes==2 & nfill==1) {
+  } else if(nnodes==2) {
+    # facets of snake-like plots
     plot <- plot_two_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
-  } else if(nnodes==3 & length(parentids)==2 & nfill==1) {
+  } else if(nnodes==3 & length(parentids)==2) {
+    # tile plots
     plot <- plot_three_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
   } else {
     abort("`autoplot` is not yet supported for this design.")
   }
   plot +
     theme_void() +
-    theme(plot.margin = margin(7, 7, 7, 7)) +
+    theme(plot.margin = margin(7, 7, 7, 7),
+          strip.background = element_rect(color = "black", size = 2),
+          strip.text = element_text(margin = margin(5, 5, 5, 5), face = "bold"),
+          panel.border = element_rect(color = "black", fill = NA),
+          plot.title = element_text(margin = margin(b = 5))) +
     ggtitle(title)
 }
 
