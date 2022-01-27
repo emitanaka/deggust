@@ -150,11 +150,14 @@ ggplot_add.ScaleNew <- function(object, plot, object_name) {
   select <- attr(object, ".select")
   aes <- attr(object, ".aes")
   scales_pos <- grep(paste0(aes, "_new"), scales)
-  # this removes the warning that the scale is already present ...
-  plot$scales$scales[scales_pos[select]] <- NULL
   nscales <- length(scales_pos) + 1L
-  object$aesthetics <- paste0(aes, paste0(rep("_new", nscales - select), collapse = ""))
-  plot$scales$add(object)
+  if(select == nscales) {
+    object$aesthetics <- aes
+    plot$scales$scales[length(scales) + 1L] <- list(object)
+  } else {
+    object$aesthetics <- paste0(aes, paste0(rep("_new", nscales - select), collapse = ""))
+    plot$scales$scales[scales_pos[select]] <- list(object)
+  }
   plot
 }
 
