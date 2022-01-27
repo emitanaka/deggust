@@ -55,7 +55,10 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
   } else {
     abort("`autoplot` is not yet supported for this design.")
   }
-  plot
+  plot +
+    theme_void() +
+    theme(plot.margin = margin(5, 5, 5, 5)) +
+    ggtitle(title)
 }
 
 plot_three_units <- function(.edibble, title, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio,
@@ -67,9 +70,7 @@ plot_three_units <- function(.edibble, title, nlevels_unit, ntrts, unit_names, t
   parent2 <- setdiff(parent_labels, parent1)
 
   ggplot(.edibble, aes(!!parse_expr(parent1), !!parse_expr(parent2), fill = !!parse_expr(trt_names))) +
-    geom_tile(color = "black", size = 2) +
-    theme(axis.ticks.length = grid::unit(0, "npc"),
-          panel.grid = element_blank()) + ggtitle(title)
+    geom_tile(color = "black", size = 2)
 
 
 }
@@ -121,7 +122,7 @@ plot_two_units <- function(.edibble, title, nlevels_unit, ntrts, unit_names, trt
       do.call("geom_text", c(list(mapping = aes(label = unit_vec)),
                              text_aes))
   }
-  plot + ggtitle(title)
+  plot
 }
 
 

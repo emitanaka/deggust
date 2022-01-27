@@ -25,9 +25,7 @@ plot_single_unit <- function(.edibble, title, nlevels_unit, ntrts, unit_names, t
     }
   }
 
-  plot <- plot +
-    theme_void() +
-    theme(plot.margin = margin(5, 5, 5, 5))
+  plot <- plot
   if(isTRUE(text) || inherits(text, "element_text")) {
     text_aes <- list()
     if(inherits(text, "element_text")) {
@@ -38,6 +36,6 @@ plot_single_unit <- function(.edibble, title, nlevels_unit, ntrts, unit_names, t
       do.call("geom_text", c(list(mapping = aes(label = unit_vec)),
                              text_aes))
   }
-  plot + ggtitle(title)
+  plot
 }
 
