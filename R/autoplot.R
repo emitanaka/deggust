@@ -21,37 +21,39 @@ ggplot2::autoplot
 #' @param fill A character vector of variable names to display. Only a maximum of three
 #'   variables are allowed. Currently, it's assumed that the the variables are discrete.
 #'   In general, it's assumed that the variables are treatment variables.
+#' @param node A character vector of variable names. It's assumed that the variables
+#'   are units.
 #' @param horizontal A logical value indicating whether the display should be
 #'  optimized for horizontal display (default) or vertical display. Not yet implemented.
 #' @return A `ggplot` object.
 #' @export
 autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
                                 shape = "circle", text = FALSE, image = NULL,
-                                fill = NULL, horizontal = TRUE) {
+                                fill = NULL, node = NULL, horizontal = TRUE) {
 
   des <- edbl_design(.edibble)
   unames <- unit_names(des)
-  nunits <- length(unames)
   tnames <- trt_names(des)
-  ntrts <- length(tnames)
   rnames <- rcrd_names(des)
   flist <- list(units = unames,
                 trts = tnames,
                 rcrds = rnames,
-                fill = fill %||% tnames)
-
-  N <- nrow(.edibble)
+                fill = fill %||% tnames,
+                node = node %||% unames)
+  shapes <- rep(shape, length.out = length(flist$fill))
+  images <- rep(image %||% NA, length.out = length(flist$fill))
+  nnodes <- length(flist$node)
+  nfill <- length(flist$fill)
   obsid <- fct_obs_unit(des)
   parentids <- intersect(fct_parent(des, obsid), unit_ids(des))
   title <- title %||% des$name
 
-  if(nunits==1) {
-    plot <- plot_single_unit(.edibble, flist, shape, image, text, aspect_ratio)
-  } else if(nunits==2 & ntrts==1) {
-    plot <- plot_two_units(.edibble, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio)
-  } else if(nunits==3 & length(parentids)==2 & ntrts==1) {
-    plot <- plot_three_units(.edibble, nlevels_unit, ntrts, unit_names, trt_names, shape, image, text, aspect_ratio,
-                             obsid, parentids)
+  if(nnodes==1) {
+    plot <- plot_single_unit(.edibble, flist, shapes, images, text, aspect_ratio)
+  } else if(nnodes==2 & nfill==1) {
+    plot <- plot_two_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
+  } else if(nnodes==3 & length(parentids)==2 & nfill==1) {
+    plot <- plot_three_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
   } else {
     abort("`autoplot` is not yet supported for this design.")
   }
