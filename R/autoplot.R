@@ -59,6 +59,10 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
     # tile plots
     plot <- plot_three_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
     show_axis_labels <- TRUE
+  } else if(nnodes > 3 & length(parentids)==4) {
+    # tile plots
+    plot <- plot_five_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
+    show_axis_labels <- TRUE
   } else {
     abort("`autoplot` is not yet supported for this design.")
   }
@@ -78,11 +82,14 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
 
   if(show_axis_labels) {
     plot <- plot + theme(axis.text.x = element_text(color = "black", size = 8,
+                                                    angle = 270,
+                                                    hjust = 0,
                                                     margin = margin(t = 5)),
                          axis.text.y = element_text(color = "black", size = 8,
                                                     margin = margin(r = 5)),
                          axis.title.x = element_text(color = "black", margin = margin(t = 5)),
-                         axis.title.y = element_text(color = "black", margin = margin(r = 5)))
+                         axis.title.y = element_text(color = "black", margin = margin(r = 5)),
+                         strip.text.y = element_text(angle = 270))
   }
 
   plot
