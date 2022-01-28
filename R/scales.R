@@ -146,17 +146,20 @@ scale_aes_select <- function(i, f, ...) {
 
 #' @export
 ggplot_add.ScaleNew <- function(object, plot, object_name) {
-  scales <- vapply(plot$scales$scales, function(x) x$aesthetics, character(1))
+  scales <- vapply(plot$scales$scales, function(x) x$aesthetics[1], character(1))
   select <- attr(object, ".select")
   aes <- attr(object, ".aes")
   scales_pos <- grep(paste0(aes, "_new"), scales)
   nscales <- length(scales_pos) + 1L
   if(select == nscales) {
-    object$aesthetics <- aes
-    plot$scales$scales[length(scales) + 1L] <- list(object)
+    pos <- which(scales==aes)
+    pos <- ifelse(length(pos), pos, length(scales) + 1L)
+    plot$scales$scales[pos] <- list(object)
+    #plot$scales$add(object)
   } else {
     object$aesthetics <- paste0(aes, paste0(rep("_new", nscales - select), collapse = ""))
     plot$scales$scales[scales_pos[select]] <- list(object)
+    #plot$scales$add(object)
   }
   plot
 }
