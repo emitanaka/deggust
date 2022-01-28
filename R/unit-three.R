@@ -26,5 +26,7 @@ plot_three_units <- function(.edibble, flist, shapes, images, text, aspect_ratio
 
   plot <- ggplot(.edibble, aes(!!parse_expr(parent1), !!parse_expr(parent2)))
   plot <- add_unit_fills(plot, flist, shapes, images)
-  plot
+  plot +
+    scale_x_discrete(limits = levels(.edibble[[parent1]])) +
+    scale_y_discrete(limits = levels(.edibble[[parent2]]))
 }

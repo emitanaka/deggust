@@ -165,10 +165,12 @@ ggplot_add.ScaleNew <- function(object, plot, object_name) {
 
 #' @importFrom vctrs vec_math
 #' @export
-vec_math.edbl_trt <- function(.fn, .x, ...) do.call(.fn, list(as.character(.x), ...))
+vec_math.edbl_trt <- function(.fn, .x, ...) do.call(.fn, list(factor(.x, levels(.x)), ...))
 
 #' @export
-vec_math.edbl_unit <- function(.fn, .x, ...) do.call(.fn, list(as.character(.x), ...))
+vec_math.edbl_unit <- function(.fn, .x, ...) do.call(.fn, list(factor(.x, levels(.x)), ...))
+
+
 
 # maybe I should add "character" to edbl_trt/edbl_unit
 

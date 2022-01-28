@@ -90,13 +90,3 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
 
 
 
-
-is_edibble_unit <- function(x) {
-  inherits(x, "edbl_unit")
-}
-
-is_edibble_trt <- function(x) {
-  inherits(x, "edbl_trt")
-}
-
-
