@@ -47,27 +47,45 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
   obsid <- fct_obs_unit(des)
   parentids <- intersect(fct_parent(des, obsid), unit_ids(des))
   title <- title %||% des$name
-
+  show_border <- show_axis_labels <- FALSE
   if(nnodes==1) {
     # snake-like plot
     plot <- plot_single_unit(.edibble, flist, shapes, images, text, aspect_ratio)
   } else if(nnodes==2) {
     # facets of snake-like plots
     plot <- plot_two_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
+    show_border <- TRUE
   } else if(nnodes==3 & length(parentids)==2) {
     # tile plots
     plot <- plot_three_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
+    show_axis_labels <- TRUE
   } else {
     abort("`autoplot` is not yet supported for this design.")
   }
-  plot +
+  plot <- plot +
     theme_void() +
     theme(plot.margin = margin(7, 7, 7, 7),
           strip.background = element_rect(color = "black", size = 2),
           strip.text = element_text(margin = margin(5, 5, 5, 5), face = "bold"),
-          panel.border = element_rect(color = "black", fill = NA),
-          plot.title = element_text(margin = margin(b = 5))) +
+          plot.title = element_text(margin = margin(b = 5)),
+          plot.title.position = "plot") +
     ggtitle(title)
+
+  if(show_border) {
+    plot <- plot +
+      theme(panel.border = element_rect(color = "black", fill = NA))
+  }
+
+  if(show_axis_labels) {
+    plot <- plot + theme(axis.text.x = element_text(color = "black", size = 8,
+                                                    margin = margin(t = 5)),
+                         axis.text.y = element_text(color = "black", size = 8,
+                                                    margin = margin(r = 5)),
+                         axis.title.x = element_text(color = "black", margin = margin(t = 5)),
+                         axis.title.y = element_text(color = "black", margin = margin(r = 5)))
+  }
+
+  plot
 }
 
 
