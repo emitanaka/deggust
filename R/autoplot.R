@@ -59,7 +59,11 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
     # tile plots
     plot <- plot_three_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
     show_axis_labels <- TRUE
-  } else if(nnodes > 3 & length(parentids)==4) {
+  } else if(nnodes==4 & length(parentids)==3) {
+    # tile plots
+    plot <- plot_four_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
+    show_axis_labels <- TRUE
+  } else if(nnodes > 4 & length(parentids)==4) {
     # tile plots
     plot <- plot_five_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
     show_axis_labels <- TRUE
