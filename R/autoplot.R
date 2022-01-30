@@ -49,22 +49,22 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
   title <- title %||% des$name
   show_border <- show_axis_labels <- FALSE
   if(nnodes==1) {
-    # snake-like plot
+    # snake-like plot, CRD
     plot <- plot_single_unit(.edibble, flist, shapes, images, text, aspect_ratio)
   } else if(nnodes==2) {
-    # facets of snake-like plots
+    # facets of snake-like plots, e.g. RCBD
     plot <- plot_two_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
     show_border <- TRUE
   } else if(nnodes==3 & length(parentids)==2) {
-    # tile plots
+    # tile plots e.g. LSD, graeco, youden
     plot <- plot_three_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
     show_axis_labels <- TRUE
-  } else if(nnodes==4 & length(parentids)==3) {
-    # tile plots
+  } else if(nnodes==4 & length(parentids) %in% c(3, 2)) {
+    # tile plots + facet_wrap
     plot <- plot_four_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
     show_axis_labels <- TRUE
   } else if(nnodes > 4 & length(parentids)==4) {
-    # tile plots
+    # tile plots + facet_grid e.g. hyper-graeco latin square design
     plot <- plot_five_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
     show_axis_labels <- TRUE
   } else {
