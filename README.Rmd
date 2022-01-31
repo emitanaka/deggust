@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
-The aim for deggust R-package is to visualise designs constructed from edibble R-package. The visualisation are ggplot graphics.
+The aim for deggust R-package is to visualise designs constructed from the edibble R-package. The visualisation are ggplot graphics.
 
 **(WIP)**
 
@@ -35,13 +35,33 @@ The development version from [GitHub](https://github.com/) with:
 devtools::install_github("emitanaka/deggust")
 ```
 
+## Recipe experimental designs 
+
+You can see `deggust::autoplot()` used in various edibble designs at https://emitanaka.org/edibble-book/cookbook.html. Some samples are below.
+
+
 ## Examples
 
 ```{r}
-library(ggplot2)
 library(edibble)
 library(deggust)
 ```
+
+```{r}
+fac <- takeout(menu_factorial(trt = c(3, 2)))
+fac
+```
+```{r}
+autoplot(fac)
+```
+```{r}
+hyper_graeco <- takeout(menu_hyper_graeco(t = 6))
+hyper_graeco
+```
+```{r}
+autoplot(hyper_graeco)
+```
+
 
 
 Automatic look into the design layout:
@@ -74,28 +94,6 @@ autoplot(unit1, shape = "hexagon",
                              face = "bold")) 
 ```
 
-
-## Other WIP graphs
-
-```{r}
-set.seed(1231) 
-
-rcbd <- start_design(name = "RCBD") %>%
-  set_units(block = c("B1", "B2"),
-            unit = nested_in(block, 6)) %>%
-  set_trts(trt = LETTERS[1:4]) %>%
-  allocate_trts(~unit) %>%
-  randomise_trts()
-```
-
-
-```{r rcbd-high-plot, fig.width = 4, fig.height = 4}
-autoplot(rcbd)
-```
-
-```{r rcbd-low-plot, fig.width = 6, fig.height = 6}
-autoplot(rcbd, view = "low")
-```
 
 
 
