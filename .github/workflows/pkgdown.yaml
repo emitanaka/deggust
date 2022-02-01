@@ -35,8 +35,8 @@ jobs:
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
-          remotes::install_github("emitanaka/simulate")
-          remotes::install_github("emitanaka/edibble")
+          remotes::install_github("emitanaka/simulate", dependencies = TRUE)
+          remotes::install_github("emitanaka/edibble", dependencies = TRUE)
           install.packages("pkgdown", type = "binary")
         shell: Rscript {0}
 
