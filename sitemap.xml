@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://deggust.emitanaka.org/404.html</loc>
+  </url>
+  <url>
+    <loc>https://deggust.emitanaka.org/authors.html</loc>
+  </url>
+  <url>
     <loc>https://deggust.emitanaka.org/index.html</loc>
   </url>
   <url>
-    <loc>https://deggust.emitanaka.org/reference/autoplot.edibble.html</loc>
+    <loc>https://deggust.emitanaka.org/reference/autoplot.edbl_table.html</loc>
   </url>
   <url>
     <loc>https://deggust.emitanaka.org/reference/deggust-package.html</loc>
   </url>
   <url>
+    <loc>https://deggust.emitanaka.org/reference/index.html</loc>
+  </url>
+  <url>
     <loc>https://deggust.emitanaka.org/reference/pipe.html</loc>
   </url>
   <url>
-    <loc>https://deggust.emitanaka.org/articles/proof-of-concept.html</loc>
+    <loc>https://deggust.emitanaka.org/reference/reexports.html</loc>
+  </url>
+  <url>
+    <loc>https://deggust.emitanaka.org/reference/scale_aes_select.html</loc>
+  </url>
+  <url>
+    <loc>https://deggust.emitanaka.org/reference/scale_fills.html</loc>
   </url>
 </urlset>

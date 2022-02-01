@@ -36,6 +36,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -48,37 +50,19 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">deggust</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="articles/proof-of-concept.html">proof-of-concept</a>
-    </li>
-  </ul>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/emitanaka/deggust/">
+  <a href="https://github.com/emitanaka/deggust/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -95,79 +79,125 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="deggust-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#deggust-" class="anchor"></a>deggust <img src="reference/figures/logo.png" align="right" alt="" width="120">
+<div class="section level1">
+<div class="page-header"><h1 id="deggust-">deggust <img src="reference/figures/logo.png" align="right" alt="" width="120"><a class="anchor" aria-label="anchor" href="#deggust-"></a>
 </h1></div>
 <!-- badges: start -->
 
-<p>The aim for deggust R-package is to visualise designs constructed from edibble R-package. The visualisation are ggplot graphics.</p>
+<p>The aim for deggust R-package is to visualise designs constructed from the edibble R-package. The visualisation are ggplot graphics.</p>
 <p><strong>(WIP)</strong></p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p>The development version from <a href="https://github.com/">GitHub</a> with:</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>The development version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"emitanaka/deggust"</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="examples" class="section level2">
-<h2 class="hasAnchor">
-<a href="#examples" class="anchor"></a>Examples</h2>
+<div class="section level2">
+<h2 id="recipe-experimental-designs">Recipe experimental designs<a class="anchor" aria-label="anchor" href="#recipe-experimental-designs"></a>
+</h2>
+<p>You can see <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">deggust::autoplot()</a></code> used in various edibble designs at <a href="https://emitanaka.org/edibble-book/cookbook.html" class="external-link uri">https://emitanaka.org/edibble-book/cookbook.html</a>. Some samples are below.</p>
+</div>
+<div class="section level2">
+<h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
+</h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://edibble.emitanaka.org/">edibble</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://deggust.emitanaka.org">deggust</a></span><span class="op">)</span></code></pre></div>
-<p>Automatic look into the design layout:</p>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://edibble.emitanaka.org/" class="external-link">edibble</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://deggust.emitanaka.org" class="external-link">deggust</a></span><span class="op">)</span>
+<span class="co">#&gt; Loading required package: ggplot2</span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">unit1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://edibble.emitanaka.org/reference/start_design.html">start_design</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"One unit"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://edibble.emitanaka.org/reference/set_trts.html">set_trts</a></span><span class="op">(</span>trt <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://edibble.emitanaka.org/reference/set_units.html">set_units</a></span><span class="op">(</span>unit <span class="op">=</span> <span class="fl">16</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://edibble.emitanaka.org/reference/allocate_trts.html">allocate_trts</a></span><span class="op">(</span><span class="va">trt</span> <span class="op">~</span> <span class="va">unit</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://edibble.emitanaka.org/reference/randomise_trts.html">randomise_trts</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://edibble.emitanaka.org/reference/serve_table.html">serve_table</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">unit1</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-3-1.png"><!-- --></p>
-<p>Easy to replace the unit shape:</p>
+<code class="sourceCode R"><span class="va">fac</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://edibble.emitanaka.org/reference/takeout.html" class="external-link">takeout</a></span><span class="op">(</span><span class="fu"><a href="https://edibble.emitanaka.org/reference/menu_factorial.html" class="external-link">menu_factorial</a></span><span class="op">(</span>trt <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="va">fac</span>
+<span class="co">#&gt; start_design("Factorial Design") %&gt;%</span>
+<span class="co">#&gt;   set_units(unit = 42) %&gt;%</span>
+<span class="co">#&gt;   set_trts(trt1 = 3,</span>
+<span class="co">#&gt;            trt2 = 2) %&gt;%</span>
+<span class="co">#&gt;   allot_trts(~unit) %&gt;%</span>
+<span class="co">#&gt;   assign_trts("random", seed = 440) %&gt;%</span>
+<span class="co">#&gt;   serve_table() </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; # Factorial Design </span>
+<span class="co">#&gt; # An edibble: 42 x 3</span>
+<span class="co">#&gt;          unit     trt1     trt2</span>
+<span class="co">#&gt;  * &lt;unit(42)&gt; &lt;trt(3)&gt; &lt;trt(2)&gt;</span>
+<span class="co">#&gt;  1     unit1     trt12    trt21</span>
+<span class="co">#&gt;  2     unit2     trt11    trt22</span>
+<span class="co">#&gt;  3     unit3     trt13    trt22</span>
+<span class="co">#&gt;  4     unit4     trt11    trt21</span>
+<span class="co">#&gt;  5     unit5     trt12    trt21</span>
+<span class="co">#&gt;  6     unit6     trt11    trt22</span>
+<span class="co">#&gt;  7     unit7     trt12    trt21</span>
+<span class="co">#&gt;  8     unit8     trt13    trt22</span>
+<span class="co">#&gt;  9     unit9     trt13    trt21</span>
+<span class="co">#&gt; 10     unit10    trt13    trt21</span>
+<span class="co">#&gt; # … with 32 more rows</span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">unit1</span><span class="op">)</span> <span class="op">+</span> <span class="fu">restyle_units</span><span class="op">(</span>shape <span class="op">=</span> <span class="st">"box"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">fac</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-4-1.png"><!-- --></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">unit1</span><span class="op">)</span> <span class="op">+</span> <span class="fu">restyle_units</span><span class="op">(</span>shape <span class="op">=</span> <span class="st">"triangle"</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-5-1.png"><!-- --></p>
+<code class="sourceCode R"><span class="va">hyper_graeco</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://edibble.emitanaka.org/reference/takeout.html" class="external-link">takeout</a></span><span class="op">(</span><span class="fu"><a href="https://edibble.emitanaka.org/reference/menu_hyper_graeco.html" class="external-link">menu_hyper_graeco</a></span><span class="op">(</span>t <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">)</span>
+<span class="va">hyper_graeco</span>
+<span class="co">#&gt; start_design("Hyper-Graeco-Latin Square Design") %&gt;%</span>
+<span class="co">#&gt;   set_units(block1 = 6,</span>
+<span class="co">#&gt;             block2 = 6,</span>
+<span class="co">#&gt;             block3 = 6,</span>
+<span class="co">#&gt;             block4 = 6,</span>
+<span class="co">#&gt;             unit = ~block1:block2:block3:block4) %&gt;%</span>
+<span class="co">#&gt;   set_trts(trt = 6) %&gt;%</span>
+<span class="co">#&gt;   allot_trts(trt ~ unit) %&gt;%</span>
+<span class="co">#&gt;   assign_trts("random", seed = 253) %&gt;%</span>
+<span class="co">#&gt;   serve_table() </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; # Hyper-Graeco-Latin Square Design </span>
+<span class="co">#&gt; # An edibble: 1,296 x 6</span>
+<span class="co">#&gt;       block1    block2    block3    block4       unit      trt</span>
+<span class="co">#&gt;  * &lt;unit(6)&gt; &lt;unit(6)&gt; &lt;unit(6)&gt; &lt;unit(6)&gt; &lt;unit(1k)&gt; &lt;trt(6)&gt;</span>
+<span class="co">#&gt;  1   block11   block21   block31   block41     unit1      trt3</span>
+<span class="co">#&gt;  2   block12   block21   block31   block41     unit2      trt6</span>
+<span class="co">#&gt;  3   block13   block21   block31   block41     unit3      trt1</span>
+<span class="co">#&gt;  4   block14   block21   block31   block41     unit4      trt5</span>
+<span class="co">#&gt;  5   block15   block21   block31   block41     unit5      trt2</span>
+<span class="co">#&gt;  6   block16   block21   block31   block41     unit6      trt4</span>
+<span class="co">#&gt;  7   block11   block22   block31   block41     unit7      trt1</span>
+<span class="co">#&gt;  8   block12   block22   block31   block41     unit8      trt3</span>
+<span class="co">#&gt;  9   block13   block22   block31   block41     unit9      trt4</span>
+<span class="co">#&gt; 10   block14   block22   block31   block41     unit10     trt2</span>
+<span class="co">#&gt; # … with 1,286 more rows</span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">unit1</span><span class="op">)</span> <span class="op">+</span> 
-  <span class="fu">restyle_units</span><span class="op">(</span>shape <span class="op">=</span> <span class="st">"hexagon"</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">restyle_labels</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">6</span>, color <span class="op">=</span> <span class="st">"gray"</span>, fontface <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">hyper_graeco</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-6-1.png"><!-- --></p>
-</div>
-<div id="other-wip-graphs" class="section level2">
-<h2 class="hasAnchor">
-<a href="#other-wip-graphs" class="anchor"></a>Other WIP graphs</h2>
+<p>Automatic look into the design layout:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1231</span><span class="op">)</span> 
+<code class="sourceCode R"><span class="va">unit1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://edibble.emitanaka.org/reference/start_design.html" class="external-link">start_design</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"One unit"</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://edibble.emitanaka.org/reference/set_trts.html" class="external-link">set_trts</a></span><span class="op">(</span>trt <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://edibble.emitanaka.org/reference/set_units.html" class="external-link">set_units</a></span><span class="op">(</span>unit <span class="op">=</span> <span class="fl">16</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span>
+    <span class="fu">allocate_trts</span><span class="op">(</span><span class="va">trt</span> <span class="op">~</span> <span class="va">unit</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span>
+    <span class="fu">randomise_trts</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="reference/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://edibble.emitanaka.org/reference/serve_table.html" class="external-link">serve_table</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; Warning: `randomise_trts` is deprecated. Please use `assign_trts("random")`</span>
+<span class="co">#&gt; instead.</span>
+<span class="co">#&gt; Warning: `allocate_trts` is deprecated. Please use `allot_trts` instead.</span>
 
-<span class="va">rcbd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://edibble.emitanaka.org/reference/start_design.html">start_design</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"RCBD"</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://edibble.emitanaka.org/reference/set_units.html">set_units</a></span><span class="op">(</span>block <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"B1"</span>, <span class="st">"B2"</span><span class="op">)</span>,
-            unit <span class="op">=</span> <span class="fu"><a href="https://edibble.emitanaka.org/reference/nested_in.html">nested_in</a></span><span class="op">(</span><span class="va">block</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://edibble.emitanaka.org/reference/set_trts.html">set_trts</a></span><span class="op">(</span>trt <span class="op">=</span> <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://edibble.emitanaka.org/reference/allocate_trts.html">allocate_trts</a></span><span class="op">(</span><span class="op">~</span><span class="va">unit</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://edibble.emitanaka.org/reference/randomise_trts.html">randomise_trts</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">unit1</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-7-1.png"><!-- --></p>
+<p>Easy to replace the unit shape:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">rcbd</span><span class="op">)</span>
-<span class="co">#&gt; Multiple parents. Unfolding graph</span>
-<span class="co">#&gt; Multiple roots in graph. Choosing the first</span>
-<span class="co">#&gt; Using `stress` as default layout</span></code></pre></div>
-<p><img src="reference/figures/README-rcbd-high-plot-1.png"><!-- --></p>
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">unit1</span>, shape <span class="op">=</span> <span class="st">"box"</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-8-1.png"><!-- --></p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html">autoplot</a></span><span class="op">(</span><span class="va">rcbd</span>, view <span class="op">=</span> <span class="st">"low"</span><span class="op">)</span>
-<span class="co">#&gt; Using `sugiyama` as default layout</span></code></pre></div>
-<p><img src="reference/figures/README-rcbd-low-plot-1.png"><!-- --></p>
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">unit1</span>, shape <span class="op">=</span> <span class="st">"triangle"</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-9-1.png"><!-- --></p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">unit1</span>, shape <span class="op">=</span> <span class="st">"hexagon"</span>,
+         text <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">6</span>, 
+                             color <span class="op">=</span> <span class="st">"gray"</span>,
+                             face <span class="op">=</span> <span class="st">"bold"</span><span class="op">)</span><span class="op">)</span> </code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-10-1.png"><!-- --></p>
 </div>
-<div id="related-work" class="section level2">
-<h2 class="hasAnchor">
-<a href="#related-work" class="anchor"></a>Related work</h2>
+<div class="section level2">
+<h2 id="related-work">Related work<a class="anchor" aria-label="anchor" href="#related-work"></a>
+</h2>
 <ul>
 <li>
 <code>desplot</code> for visualising designs</li>
@@ -182,45 +212,56 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/emitanaka/deggust/">https://​github.com/​emitanaka/​deggust/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/emitanaka/deggust/issues">https://​github.com/​emitanaka/​deggust/​issues</a>
-</li>
-</ul>
-</div>
-<div class="license">
-<h2>License</h2>
-<ul class="list-unstyled">
-<li>
-<a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>Emi Tanaka <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-1455-259X" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="https://github.com/emitanaka/deggust/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/emitanaka/deggust/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="license">
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li>
+<a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing deggust</a></li>
+</ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Emi Tanaka <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-1455-259X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://www.tidyverse.org/lifecycle/#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+</ul>
+</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Emi Tanaka.</p>
+  <p></p>
+<p>Developed by Emi Tanaka.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -228,6 +269,8 @@
 
   
 
+
+  
 
   </body>
 </html>
