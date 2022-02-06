@@ -44,7 +44,7 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
   images <- rep(image %||% NA, length.out = min(length(flist$fill), 3))
   nnodes <- length(flist$node)
   nfill <- length(flist$fill)
-  obsid <- fct_obs_unit(des)
+  obsid <- fct_obs_unit(select_units(des, unit_ids(des)))
   parentids <- intersect(fct_parent(des, obsid), unit_ids(des))
   title <- title %||% des$name
   show_border <- show_axis_labels <- FALSE
@@ -59,6 +59,10 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
     # tile plots e.g. LSD, graeco, youden
     plot <- plot_three_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
     show_axis_labels <- TRUE
+  } else if(nnodes==3 & length(parentids)==1) {
+    # block/pot/plant
+    plot <- plot_three_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
+    show_axis_labels <- FALSE
   } else if(nnodes==4 & length(parentids) %in% c(3, 2)) {
     # tile plots + facet_wrap
     plot <- plot_four_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
