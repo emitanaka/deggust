@@ -44,7 +44,7 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
   images <- rep(image %||% NA, length.out = min(length(flist$fill), 3))
   nnodes <- length(flist$node)
   nfill <- length(flist$fill)
-  obsid <- fct_obs_unit(select_units(des, unit_ids(des)))
+  obsid <- fct_obs_unit(select_units(des, unames))
   parentids <- intersect(fct_parent(des, obsid), unit_ids(des))
   title <- title %||% des$name
   show_border <- show_axis_labels <- FALSE
