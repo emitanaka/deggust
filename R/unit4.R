@@ -1,10 +1,10 @@
 plot_four_units <- function(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids) {
-  des <- edbl_design(.edibble)
-  vlevs <- fct_levels(des)
-  parents <- rev(fct_names(des, parentids))
+  prep <- cook_design(.edibble)
+  vlevs <- prep$fct_levels()
+  parents <- rev(prep$fct_names(parentids))
   #parents <- names(sort(-lengths(vlevs[parent_labels])))
-  unames <- unit_names(des)
-  ou <- fct_names(des, obsid)
+  unames <- prep$unit_names
+  ou <- prep$fct_names(obsid)
   block <- ifelse(length(parentids)==3, parents[3], setdiff(unames, c(parents, ou)))
   # FIXME the facet free_x doesn't work with edibble units
   # below is a temporary measure to make it work

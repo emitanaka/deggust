@@ -1,10 +1,10 @@
 plot_two_units <- function(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids) {
 
-  des <- edbl_design(.edibble)
-  vlevs <- fct_levels(des)
+  prep <- cook_design(.edibble)
+  vlevs <- prep$fct_levels()
   nlevels_units <- lengths(vlevs[flist$node])
-  parent_label <- fct_names(des, parentids)
-  obs_label <- fct_names(des, obsid)
+  parent_label <- prep$fct_names(parentids)
+  obs_label <- prep$fct_names(obsid)
 
   nodes <- split(.edibble, .edibble[[parent_label]])
   nodes <- lapply(nodes, function(df) cbind(df, coord_snake(nrow(df), aspect_ratio)))

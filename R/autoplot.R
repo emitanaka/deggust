@@ -31,10 +31,10 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
                                 shape = "circle", text = FALSE, image = NULL,
                                 fill = NULL, node = NULL, horizontal = TRUE) {
 
-  des <- edbl_design(.edibble)
-  unames <- unit_names(des)
-  tnames <- trt_names(des)
-  rnames <- rcrd_names(des)
+  prep <- cook_design(.edibble)
+  unames <- prep$unit_names
+  tnames <- prep$trt_names
+  rnames <- prep$rcrd_names
   flist <- list(units = unames,
                 trts = tnames,
                 rcrds = rnames,
@@ -44,9 +44,9 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
   images <- rep(image %||% NA, length.out = min(length(flist$fill), 3))
   nnodes <- length(flist$node)
   nfill <- length(flist$fill)
-  obsid <- fct_obs_unit(select_units(des, unames))
-  parentids <- intersect(fct_parent(des, obsid), unit_ids(des))
-  title <- title %||% des$name
+  obsid <- select_units(prep, unames)$fct_obs_unit()
+  parentids <- intersect(prep$fct_parent(obsid), prep$unit_ids)
+  title <- title %||% prep$design$name
   show_border <- show_axis_labels <- FALSE
   if(nnodes==1) {
     # snake-like plot, CRD

@@ -1,7 +1,7 @@
 plot_five_units <- function(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids) {
-  des <- edbl_design(.edibble)
-  vlevs <- fct_levels(des)
-  parent_labels <- fct_names(des, parentids)
+  prep <- cook_design(.edibble)
+  vlevs <- prep$fct_levels()
+  parent_labels <- prep$fct_names(parentids)
   parents <- names(sort(-lengths(vlevs[parent_labels])))
 
   plot <- ggplot(.edibble, aes(!!parse_expr(parents[1]), !!parse_expr(parents[2])))
