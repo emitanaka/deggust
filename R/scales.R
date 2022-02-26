@@ -117,6 +117,8 @@ scale_fill3_manual <- function(...) {
   scale_aes_select(3, ggplot2::scale_fill_manual, ...)
 }
 
+
+
 #' Change selected scale where multiple scales of same aesthetic exist
 #'
 #' @param i An integer denoting the scale number.

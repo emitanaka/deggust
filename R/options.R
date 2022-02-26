@@ -1,22 +1,44 @@
 op.deggust <- list(
-  deggust.vertex.label.color.unit = "#E69F00",
-  deggust.vertex.label.color.trt = "#56B4E9",
-  deggust.vertex.label.color.rcrd = "#009E73",
-  deggust.edge.color.v2l = "gray",
-  deggust.edge.color.l2lseq = "gray",
-  deggust.edge.color.v2v = "black",
-  deggust.edge.color.r2v = "black", # record to var
-  deggust.edge.color.l2l = "black",
-  deggust.edge.color.t2v = "#56B4E9", # blue
-  deggust.edge.color.t2vmay = "#56B4E9",
-  deggust.edge.lty.v2l = 3, # vertex to level
-  deggust.edge.lty.l2lseq = 3, # level to level sequence
-  deggust.edge.lty.r2v = 2, # vertex to vertex nesting
-  deggust.edge.lty.v2v = 1, # vertex to vertex nesting
-  deggust.edge.lty.l2l = 1, # level to level nesting
-  deggust.edge.lty.t2v = 1, # treatment to variable
-  deggust.edge.lty.t2vmay = 2 # treatment level to variable level potential
+  deggust.nnode_max = 1000,
+  deggust.nfill_max = 8,
+  deggust.discrete.fill = list(
+    # Paul Tol's high contrast
+    c("#DDAA33", "#BB5566", "#004488", "#000000", '#FFFFFF'), # 5
+    # okabe ito + white
+    c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000", '#FFFFFF'), # 9
+    # Paul Tol's muted + black
+    c("#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#CC6677", "#882255", "#AA4499", "#000000", "#DDDDDD"), # 11,
+    # rcaratcolor safe
+    c("#88CCEE", "#CC6677", "#DDCC77", "#117733", "#332288", "#AA4499",
+      "#44AA99", "#999933", "#882255", "#661100", "#6699CC", "#888888") # 12
+  )
 )
+
+#' Controls for the deggust autoplot
+#'
+#' @param page A positive integer referencing the page number of the plot. This is only
+#'  relevant if you have more than `nnode_max` units to display.
+#' @param nnode_max The number of maximum nodes to display.
+#' @param nfill_max A single integer or vector of integers to indicate the maximum number of fill levels to
+#'   show in the output. If it is a vector then the order determines the maximum number of fill levels to
+#'   show for the corresponding fill factor. If the number of fill levels are larger than the maximum,
+#'   the fill levels will be collapsed into one.
+#' @param random_fills,random_units A logical value to indicate whether the factor levels chosen to display, if
+#'   the factor levels are above `nfill_max` or `nnode_max`, should be based on a random or systematic order. The
+#'   default is FALSE.
+#' @export
+deggust_control <- function(page = 1,
+                            nnode_max = deggust_opt("nnode_max"),
+                            nfill_max = deggust_opt("nfill_max"),
+                            random_fills = FALSE,
+                            random_units = FALSE) {
+
+  list(page = page,
+       nnode_max = nnode_max,
+       nfill_max = nfill_max,
+       random_fills = random_fills,
+       random_units = random_units)
+}
 
 
 
@@ -37,10 +59,3 @@ deggust_opt <- function(x, prefix = "deggust.") {
   }
 }
 
-edge_ltype_dict <- c("v2l" = deggust_opt("edge.lty.v2l"),
-                     "l2lseq" = deggust_opt("edge.lty.l2lseq"),
-                     "r2v" = deggust_opt("edge.lty.r2v"),
-                     "v2v" = deggust_opt("edge.lty.v2v"),
-                     "l2l" = deggust_opt("edge.lty.l2l"),
-                     "t2v" = deggust_opt("edge.lty.t2v"),
-                     "t2vmay" = deggust_opt("edge.lty.t2vmay"))

@@ -4,8 +4,8 @@ remove_nulls <- function(.x) {
 }
 
 coord_snake <- function(n, aspect_ratio, swap = TRUE) {
-  w <- ceiling(sqrt(n * aspect_ratio))
-  h <- ceiling(sqrt(n / aspect_ratio))
+  h <- ceiling(sqrt(n * aspect_ratio))
+  w <- ceiling(sqrt(n / aspect_ratio))
   M <- matrix(ncol = w, nrow = h)
   R <- row(M)
   # swap direction every odd row
@@ -22,22 +22,36 @@ another_fill_scale <- function(plot, i, flist, shape = NULL, image = NULL, heigh
   plot
 }
 
-add_unit_fills <- function(plot, flist, shapes, images) {
-  nfill <- length(flist$fill)
-  plot <- add_unit(plot, flist$fill[1], shapes[1], images[1], height = 1, width = 1, size = 0.1)
-  if(nfill==1) plot <- plot + scale_fill_viridis_d(option = "A")
-  if(nfill > 1) {
-    plot <- plot + scale_fill_viridis_d(option = "A")
-    plot <- another_fill_scale(plot, 2, flist$fill[2], shape = shapes[2], image = images[2],
-                               height = ifelse(nfill > 2, 0.66, 0.5),
-                               width = ifelse(nfill > 2, 0.66, 0.5),
-                               size = ifelse(nfill > 2, 0.066, 0.05)) +
-      scale_fill_viridis_d(option = "D")
-    if(nfill > 2) {
-      plot <- another_fill_scale(plot, 3, flist$fill[3], shape = shapes[3], image = images[3],
-                                 height = 0.33, width = 0.33, size = 0.033) +
-        scale_fill_viridis_d(option = "E")
-    }
+
+
+warn_drop <- function(edibble, data) {
+  n <- nrow(edibble)
+  nd <- nrow(data)
+  if(nd < n) {
+    rlang::warn(paste0("Too manu units so ", n - nd, " units dropped from the plot. If you want to see all, use `nnode_max = Inf` or use `page = 2` to see the next set."))
   }
-  plot
+}
+
+# maybe don't need this?
+lvl_lump <- function(f, n, random = FALSE) {
+  lvls <- levels(f)
+  nl <- length(lvls)
+  if(nl <= n + 1) {
+    return(f)
+  }
+  index <- if(random) sample(1:nl, n) else 1:n
+  lvls_keep <- lvls[index]
+  other <- paste(nl - n, "others")
+  f[!f %in% lvls_keep] <- other
+  attr(f, "levels") <- c(lvls_keep, other)
+  f
+}
+
+lvl_lump_keep <- function(lvls, n, random = FALSE) {
+  nl <- length(lvls)
+  if(nl <= n + 1) {
+    return(lvls)
+  }
+  index <- if(random) sample(1:nl, n) else 1:n
+  lvls[index]
 }

@@ -83,3 +83,4 @@ scale_fill_hsll <- function(h = 0, s = 0.7, l = 0.5, aesthetics = "fill",
   }
   discrete_scale(aesthetics, "manual", pal, ...)
 }
+

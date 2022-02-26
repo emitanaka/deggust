@@ -25,11 +25,20 @@ ggplot2::autoplot
 #'   are units.
 #' @param horizontal A logical value indicating whether the display should be
 #'  optimized for horizontal display (default) or vertical display. Not yet implemented.
+#' @param control A named list that contain values to control the choice of data to be displayed.
 #' @return A `ggplot` object.
 #' @export
-autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
-                                shape = "circle", text = FALSE, image = NULL,
-                                fill = NULL, node = NULL, horizontal = TRUE) {
+autoplot.edbl_table <- function(.edibble,
+                                title = NULL,
+                                subtitle = NULL,
+                                aspect_ratio = 4/3,
+                                shape = "circle",
+                                text = FALSE,
+                                image = NULL,
+                                fill = NULL,
+                                node = NULL,
+                                horizontal = TRUE,
+                                control = deggust_control()) {
 
   prep <- cook_design(.edibble)
   unames <- prep$unit_names
@@ -40,36 +49,59 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
                 rcrds = rnames,
                 fill = fill %||% tnames,
                 node = node %||% unames)
+  flvls <- prep$fct_levels()
   shapes <- rep(shape, length.out = min(length(flist$fill), 3))
   images <- rep(image %||% NA, length.out = min(length(flist$fill), 3))
   nnodes <- length(flist$node)
   nfill <- length(flist$fill)
-  obsid <- select_units(prep, unames)$fct_obs_unit()
+  obsid <- prep$fct_leaves
   parentids <- intersect(prep$fct_parent(obsid), prep$unit_ids)
   title <- title %||% prep$design$name
+  subtitle <- subtitle %||% paste("Unit:", prep$fct_names(obsid))
   show_border <- show_axis_labels <- FALSE
+
+  # FIXME: control should be probably applied at the plot not the data
+
+  # nnode_max
+  # FIXME: not using control$random_units at the moment
+  # This however makes the page control hard though so perhaps don't go ahead with it?
+  min_index <- (control$page - 1) * control$nnode_max + 1
+  max_index <- min(control$page * control$nnode_max, nrow(.edibble))
+  data <- .edibble[min_index:max_index, ]
+
+
+  # # nfill_max
+  # control$nfill_max <- rep(control$nfill_max, length.out = nfill)
+  # control$random_fills <- rep(control$random_fills, length.out = nfill)
+  # for(ifill in seq_along(flist$fill)) {
+  #   data[[flist$fill[ifill]]] <- lvl_lump(data[[flist$fill[ifill]]],
+  #                                       control$nfill_max[ifill],
+  #                                       control$random_fills[ifill])
+  # }
+  if(control$page==1) warn_drop(.edibble, data)
+
   if(nnodes==1) {
     # snake-like plot, CRD
-    plot <- plot_single_unit(.edibble, flist, shapes, images, text, aspect_ratio)
+    plot <- plot1(data, flist, flvls, shapes, images, text, aspect_ratio, control)
   } else if(nnodes==2) {
     # facets of snake-like plots, e.g. RCBD
-    plot <- plot_two_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
+    plot <- plot2(data, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids)
     show_border <- TRUE
   } else if(nnodes==3 & length(parentids)==2) {
     # tile plots e.g. LSD, graeco, youden
-    plot <- plot_three_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
+    plot <- plot3(data, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids)
     show_axis_labels <- TRUE
   } else if(nnodes==3 & length(parentids)==1) {
     # block/pot/plant
-    plot <- plot_three_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
+    plot <- plot3(data, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids)
     show_axis_labels <- FALSE
   } else if(nnodes==4 & length(parentids) %in% c(3, 2)) {
     # tile plots + facet_wrap
-    plot <- plot_four_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
+    plot <- plot4(data, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids)
     show_axis_labels <- TRUE
   } else if(nnodes > 4 & length(parentids)==4) {
     # tile plots + facet_grid e.g. hyper-graeco latin square design
-    plot <- plot_five_units(.edibble, flist, shapes, images, text, aspect_ratio, obsid, parentids)
+    plot <- plot5(data, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids)
     show_axis_labels <- TRUE
   } else {
     abort("`autoplot` is not yet supported for this design.")
@@ -79,9 +111,11 @@ autoplot.edbl_table <- function(.edibble, title = NULL, aspect_ratio = 1,
     theme(plot.margin = margin(7, 7, 7, 7),
           strip.background = element_rect(color = "black", size = 2),
           strip.text = element_text(margin = margin(5, 5, 5, 5), face = "bold"),
-          plot.title = element_text(margin = margin(b = 5)),
+          plot.title = element_text(margin = margin(b = 5), face = "bold"),
+          plot.subtitle = element_text(family = "mono"),
           plot.title.position = "plot") +
-    ggtitle(title)
+    coord_equal() +
+    labs(title = title, subtitle = subtitle)
 
   if(show_border) {
     plot <- plot +
