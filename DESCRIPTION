@@ -30,5 +30,6 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    ggimage
+    ggimage,
+    vdiffr
 VignetteBuilder: knitr

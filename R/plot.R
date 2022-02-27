@@ -199,12 +199,15 @@ add_unit_fills <- function(plot, flist, flvls, shapes, images, control) {
       if(any(chosen_fills[[3]]=="scale")) {
         plot <- plot + scale_fill_viridis_d(option = "E")
       } else {
-        plot <- plot + ggplot2::scale_fill_manual(breaks = fill_lvls[[3]],
+        plot <- plot + scale_fill_manual(breaks = fill_lvls[[3]],
                                                   values = rep(chosen_fills[[3]]$color,
                                                                length.out = chosen_fills[[3]]$nlvl))
       }
+
     }
   }
-  plot
+  plot + guides(fill_new_new = guide_legend(order = 1),
+                fill_new = guide_legend(order = 2),
+                fill = guide_legend(order = 3))
 }
 

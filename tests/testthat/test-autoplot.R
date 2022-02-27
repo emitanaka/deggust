@@ -1,48 +1,15 @@
 test_that("autoplot", {
+  expect_doppelganger("bibd", autoplot(takeout(menu_bibd(t = 5, r = 4, k = 3, seed = 1))))
+  expect_doppelganger("crd", autoplot(takeout(menu_crd(t = 8, n = 20, seed = 1))))
+  expect_doppelganger("fac", autoplot(takeout(menu_factorial(trt = c(2, 4, 3), r = 2, seed = 1))))
+  expect_doppelganger("graeco", autoplot(takeout(menu_graeco(t = 7, seed = 1))))
+  expect_doppelganger("hyper-graeco", autoplot(takeout(menu_hyper_graeco(t = 4, seed = 1))))
+  expect_doppelganger("lsd", autoplot(takeout(menu_lsd(t = 7, seed = 1))))
+  expect_doppelganger("rcbd", autoplot(takeout(menu_rcbd(t = 8, r = 2, seed = 1))))
+  expect_doppelganger("split", autoplot(takeout(menu_split(t1 = 3, t2 = 4, r = 3, seed = 1))))
+  expect_doppelganger("strip", autoplot(takeout(menu_strip(t1 = 3, t2 = 4, r = 3, seed = 1))))
+  expect_doppelganger("youden", autoplot(takeout(menu_youden(nc = 3, t = 4, seed = 1))))
 
-  test_that("autoplot graph of edibble variables", {
-    crd <- make_classical("crd", .output = FALSE)
-    autoplot(crd)
-
-    rcbd <- make_classical("rcbd", .output = FALSE)
-    autoplot(rcbd)
-
-    lsd <- make_classical("lsd", .output = FALSE)
-    autoplot(lsd)
-
-
-
-  })
 
 })
 
-
-test_that("proof of concept", {
-  unit1 <- start_design(name = "One unit") %>%
-    set_trts(trt = 4) %>%
-    set_units(unit = 16) %>%
-    allocate_trts(trt ~ unit) %>%
-    randomise_trts() %>%
-    serve_table()
-
-  autoplot(unit1)
-
-  unit2 <- start_design(name = "Two units") %>%
-    set_trts(trt = 3) %>%
-    set_units(block = 4,
-              unit = nested_in(block, 5)) %>%
-    allocate_trts(trt ~ unit) %>%
-    randomise_trts() %>%
-    serve_table()
-
-
-
-  # unit3 <- start_design(name = "Three units") %>%
-  #   set_trts(trt = 3) %>%
-  #   set_units(block = 2,
-  #             row = nested_in(block, 4),
-  #             plot = nested_in(row, 6)) %>%
-  #   allocate_trts(trt ~ plot) %>%
-  #   randomise_trts() %>%
-  #   serve_table()
-})
