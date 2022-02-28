@@ -56,9 +56,12 @@ autoplot.edbl_table <- function(.edibble,
   nfill <- length(flist$fill)
   obsid <- prep$fct_leaves
   parentids <- intersect(prep$fct_parent(obsid), prep$unit_ids)
-  title <- title %||% prep$design$name
-  subtitle <- subtitle %||% paste("Unit:", prep$fct_names(obsid))
-  show_border <- show_axis_labels <- FALSE
+
+
+  plot_set <- list(show_border = FALSE,
+                   show_axis_labels = FALSE,
+                   title = title %||% prep$design$name,
+                   subtitle = subtitle %||% paste("Unit:", prep$fct_names(obsid)))
 
   # FIXME: control should be probably applied at the plot not the data
 
@@ -86,56 +89,71 @@ autoplot.edbl_table <- function(.edibble,
   } else if(nnodes==2) {
     # facets of snake-like plots, e.g. RCBD
     plot <- plot2(data, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids)
-    show_border <- TRUE
+    plot_set$show_border <- TRUE
   } else if(nnodes==3 & length(parentids)==2) {
     # tile plots e.g. LSD, graeco, youden
     plot <- plot3(data, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids)
-    show_axis_labels <- TRUE
+    plot_set$show_axis_labels <- TRUE
   } else if(nnodes==3 & length(parentids)==1) {
     # block/pot/plant
     plot <- plot3(data, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids)
-    show_axis_labels <- FALSE
+    plot_set$show_axis_labels <- FALSE
   } else if(nnodes==4 & length(parentids) %in% c(3, 2)) {
     # tile plots + facet_wrap
     plot <- plot4(data, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids)
-    show_axis_labels <- TRUE
+    plot_set$show_axis_labels <- TRUE
   } else if(nnodes > 4 & length(parentids)==4) {
     # tile plots + facet_grid e.g. hyper-graeco latin square design
     plot <- plot5(data, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids)
-    show_axis_labels <- TRUE
+    plot_set$show_axis_labels <- TRUE
   } else {
     abort("`autoplot` is not yet supported for this design.")
   }
-  plot <- plot +
-    theme_void() +
-    theme(plot.margin = margin(7, 7, 7, 7),
-          strip.background = element_rect(color = "black", size = 2),
-          strip.text = element_text(margin = margin(5, 5, 5, 5), face = "bold"),
-          plot.title = element_text(margin = margin(b = 5), face = "bold"),
-          plot.subtitle = element_text(family = "mono"),
-          plot.title.position = "plot") +
-    coord_equal() +
-    labs(title = title, subtitle = subtitle)
 
-  if(show_border) {
-    plot <- plot +
-      theme(panel.border = element_rect(color = "black", fill = NA))
+  plot_set_last(plot, plot_set)
+}
+
+plot_set_last <- function(plot, set) {
+  plot <- plot +
+    plot_default() +
+    labs(title = set$title, subtitle = set$subtitle)
+
+  if(set$show_border) {
+    plot <- plot + theme_border()
   }
 
-  if(show_axis_labels) {
-    plot <- plot + theme(axis.text.x = element_text(color = "black", size = 8,
-                                                    angle = 270,
-                                                    hjust = 0,
-                                                    margin = margin(t = 5)),
-                         axis.text.y = element_text(color = "black", size = 8,
-                                                    margin = margin(r = 5)),
-                         axis.title.x = element_text(color = "black", margin = margin(t = 5)),
-                         axis.title.y = element_text(color = "black", margin = margin(r = 5)),
-                         strip.text.y = element_text(angle = 270))
+  if(set$show_axis_labels) {
+    plot <- plot + theme_axis()
   }
 
   plot
 }
 
+theme_axis <- function() {
+  theme(axis.text.x = element_text(color = "black", size = 8,
+                                   angle = 270,
+                                   hjust = 0,
+                                   margin = margin(t = 5)),
+        axis.text.y = element_text(color = "black", size = 8,
+                                   margin = margin(r = 5)),
+        axis.title.x = element_text(color = "black", margin = margin(t = 5)),
+        axis.title.y = element_text(color = "black", margin = margin(r = 5)),
+        strip.text.y = element_text(angle = 270))
+}
+
+theme_border <- function() {
+  theme(panel.border = element_rect(color = "black", fill = NA))
+}
 
 
+plot_default <- function() {
+  list(theme_void() +
+         theme(plot.margin = margin(7, 7, 7, 7),
+               strip.background = element_rect(color = "black", size = 2),
+               strip.text = element_text(margin = margin(5, 5, 5, 5), face = "bold"),
+               plot.title = element_text(margin = margin(b = 5), face = "bold"),
+               plot.subtitle = element_text(family = "mono"),
+               plot.title.position = "plot"),
+       coord_equal())
+
+}

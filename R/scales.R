@@ -129,6 +129,11 @@ scale_fill3_manual <- function(...) {
 #' scale_aes_select(1, ggplot2::scale_fill_manual, values = c("red", "white", "blue"))
 #' scale_aes_select(1, ggplot2::scale_fill_manual(values = c("red", "white", "blue")))
 #'
+#' # Alternatively, you could just use the ggplot scales directly with different aesthetics
+#' # but this involves knowing how many colors there are in the first place
+#' # E.g. fill_new = 1 if there are 2 fills, fill_new = 2 if there are 3 fills.
+#' scale_fill_manual(aesthetics = "fill_new")
+#'
 #' @seealso scale_fills
 #' @export
 scale_aes_select <- function(i, f, ...) {
