@@ -159,50 +159,48 @@ add_unit_fills <- function(plot, flist, flvls, shapes, images, control) {
       return(0)
     }
   }
+  other_color <- "#FFFFFF"
+  virdis_opts <- c("A", "D", "E")
+  get_viridis_pal <- function(i) {
+    viridis::viridis_pal(option = virdis_opts[1])(i)
+  }
 
   chosen_fills <- list()
   for(imax in seq_along(nmax_fills)) {
-    k <- find_fill_scale(nmax_fills[imax])
+    nmax_fill <- nmax_fills[imax]
+    nlvl <- length(flvls[[flist$fill[imax]]])
+    k <- find_fill_scale(nmax_fill)
+    m <- ifelse(has_other <- nlvl > nmax_fill, nmax_fill - 1, nlvl)
     if(k > 0) {
-      chosen_fills[[imax]] <- list(color = opt_fills[[k]],
-                                   nlvl = length(flvls[[flist$fill[imax]]]))
+      cols <- opt_fills[[k]]
+      chosen_fills[[imax]] <- if(has_other) c(cols[1:m], other_color) else cols[1:m]
       opt_fills[[k]] <- NULL
     } else {
-      chosen_fills[[imax]] <- "scale"
+      cols <- get_viridis_pal(m)
+      chosen_fills[[imax]] <- if(has_other) c(cols[1:m], other_color) else cols[1:m]
+      virdis_opts <- virdis_opts[-1]
     }
   }
 
-  if(any(chosen_fills[[1]]=="scale")) {
-    plot <- plot + scale_fill_viridis_d(option = "A")
-  } else {
-    plot <- plot + ggplot2::scale_fill_manual(breaks = fill_lvls[[1]],
-                                              values = rep(chosen_fills[[1]]$color,
-                                                           length.out = chosen_fills[[1]]$nlvl))
-  }
+  plot <- plot + scale_fill_manual(limits = fill_lvls[[1]],
+                                   values = chosen_fills[[1]],
+                                   na.value = other_color)
 
   if(nfill > 1) {
     plot <- another_fill_scale(plot, 2, flist$fill[2], shape = shapes[2], image = images[2],
                                height = ifelse(nfill > 2, 0.66, 0.5),
                                width = ifelse(nfill > 2, 0.66, 0.5),
                                size = ifelse(nfill > 2, 0.066, 0.05))
-    if(any(chosen_fills[[2]]=="scale")) {
-      plot <- plot + scale_fill_viridis_d(option = "D")
-    } else {
-      plot <- plot + ggplot2::scale_fill_manual(breaks = fill_lvls[[2]],
-                                                values = rep(chosen_fills[[2]]$color,
-                                                             length.out = chosen_fills[[2]]$nlvl))
-    }
+    plot <- plot + scale_fill_manual(limits = fill_lvls[[2]],
+                                     values = chosen_fills[[2]],
+                                     na.value = other_color)
 
     if(nfill > 2) {
       plot <- another_fill_scale(plot, 3, flist$fill[3], shape = shapes[3], image = images[3],
                                  height = 0.33, width = 0.33, size = 0.033)
-      if(any(chosen_fills[[3]]=="scale")) {
-        plot <- plot + scale_fill_viridis_d(option = "E")
-      } else {
-        plot <- plot + scale_fill_manual(breaks = fill_lvls[[3]],
-                                                  values = rep(chosen_fills[[3]]$color,
-                                                               length.out = chosen_fills[[3]]$nlvl))
-      }
+      plot <- plot + scale_fill_manual(limits = fill_lvls[[3]],
+                                       values = chosen_fills[[3]],
+                                       na.value = other_color)
 
     }
   }

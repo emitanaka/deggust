@@ -68,7 +68,7 @@ autoplot.edbl_table <- function(.edibble,
   # nnode_max
   # FIXME: not using control$random_units at the moment
   # This however makes the page control hard though so perhaps don't go ahead with it?
-  min_index <- (control$page - 1) * control$nnode_max + 1
+  min_index <- ifelse(is.infinite(control$nnode_max), 1L, (control$page - 1) * control$nnode_max + 1)
   max_index <- min(control$page * control$nnode_max, nrow(.edibble))
   data <- .edibble[min_index:max_index, ]
 

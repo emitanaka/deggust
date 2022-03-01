@@ -53,5 +53,6 @@ lvl_lump_keep <- function(lvls, n, random = FALSE) {
     return(lvls)
   }
   index <- if(random) sample(1:nl, n) else 1:n
-  lvls[index]
+  other <- paste(nl - n, "others")
+  c(lvls[index], other)
 }

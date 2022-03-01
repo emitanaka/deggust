@@ -1,7 +1,6 @@
 #' @export
 draw_key_unit <- function(data, params, size) {
 
-  #browser()
   if (is.null(data$size)) {
     data$size <- 1
   }
