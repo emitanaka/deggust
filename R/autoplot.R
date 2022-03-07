@@ -153,7 +153,7 @@ plot_default <- function() {
                strip.text = element_text(margin = margin(5, 5, 5, 5), face = "bold"),
                plot.title = element_text(margin = margin(b = 5), face = "bold"),
                plot.subtitle = element_text(family = "mono"),
-               plot.title.position = "plot"),
-       coord_equal())
+               plot.title.position = "plot"))
+  #coord_equal()
 
 }

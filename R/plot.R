@@ -68,6 +68,7 @@ plot3 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
 
 
 plot4 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids) {
+
   prep <- cook_design(.edibble)
   parents <- rev(prep$fct_names(parentids))
   unames <- prep$unit_names
@@ -83,11 +84,7 @@ plot4 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
   plot <- ggplot(.edibble, aes(!!parse_expr(parents[1]), !!parse_expr(parents[2])))
   plot <- add_unit_fills(plot, flist, flvls, shapes, images, control)
   plot <- plot
-  if(length(parentids)==3) {
-    plot + facet_wrap(parse_expr(block))
-  } else {
-    plot + facet_wrap(parse_expr(block), scales = "free")
-  }
+  plot + facet_wrap(parse_expr(block), scales = "free")
 }
 
 
