@@ -9,7 +9,7 @@ coord_snake <- function(n, aspect_ratio, swap = TRUE) {
   M <- matrix(ncol = w, nrow = h)
   R <- row(M)
   # swap direction every odd row
-  if(swap) {
+  if(swap & ncol(R) > 1) {
     R[, c(FALSE, TRUE)] <- R[nrow(R):1, c(FALSE, TRUE)]
   }
   list(x = as.vector(R)[1:n],
