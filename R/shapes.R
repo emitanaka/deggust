@@ -67,6 +67,7 @@ GeomNodeShape <- ggproto("GeomNodeShape", Geom,
                          extra_params = c("na.rm", "shape", "phase"),
                          draw_key = draw_key_shape,
                          default_aes = aes(colour = "black",
+                                           size = 1,
                                            lwd = 1, lty = "solid",
                                            alpha = 1, fill = "white",
                                            width = NULL, height = NULL),
@@ -84,12 +85,10 @@ GeomNodeShape <- ggproto("GeomNodeShape", Geom,
                            do.call(rbind, data_shape)
                          },
                          draw_panel = function(data, panel_params, coord, ...) {
-                           #browser()
                             n <- nrow(data)
                             if(n==0) {
                               return(zeroGrob())
                             }
-                            #browser()
                             munched <- coord_munch(coord, data, panel_params)
                             munched <- munched[order(munched$group), ]
                             if (!is.integer(munched$group)) {

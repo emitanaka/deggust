@@ -34,12 +34,10 @@ GeomUnitNode <- ggproto("GeomUnitNode", Geom,
                            do.call(rbind, data_shape)
                          },
                          draw_panel = function(data, panel_params, coord, ...) {
-                           #browser()
                            n <- nrow(data)
                            if(n==0) {
                              return(zeroGrob())
                            }
-                           #browser()
                            munched <- coord_munch(coord, data, panel_params)
                            munched <- munched[order(munched$group), ]
                            if (!is.integer(munched$group)) {
