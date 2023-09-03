@@ -40,28 +40,28 @@ autoplot.edbl_table <- function(.edibble,
                                 horizontal = TRUE,
                                 control = deggust_control()) {
 
-  prep <- cook_design(.edibble)
-  unames <- prep$unit_names
-  tnames <- prep$trt_names
-  rnames <- prep$rcrd_names
+  prov <- edibble::activate_provenance(.edibble)
+  unames <- prov$unit_names()
+  tnames <- prov$trt_names()
+  rnames <- prov$rcrd_names()
   flist <- list(units = unames,
                 trts = tnames,
                 rcrds = rnames,
                 fill = fill %||% tnames,
                 node = node %||% unames)
-  flvls <- prep$fct_levels()
+  flvls <- prov$fct_levels(return = "value")
   shapes <- rep(shape, length.out = min(length(flist$fill), 3))
   images <- rep(image %||% NA, length.out = min(length(flist$fill), 3))
   nnodes <- length(flist$node)
   nfill <- length(flist$fill)
-  obsid <- prep$fct_leaves
-  parentids <- intersect(prep$fct_parent(obsid), prep$unit_ids)
+  obsid <- prov$fct_id_leaves(role = "edbl_unit")
+  parentids <- prov$fct_id_parent(id = obsid, role = "edbl_unit")
 
 
   plot_set <- list(show_border = FALSE,
                    show_axis_labels = FALSE,
-                   title = title %||% prep$design$name,
-                   subtitle = subtitle %||% paste("Unit:", prep$fct_names(obsid)))
+                   title = title %||% prov$get_title(),
+                   subtitle = subtitle %||% paste("Unit:", prov$fct_names(id = obsid)))
 
   # FIXME: control should be probably applied at the plot not the data
 

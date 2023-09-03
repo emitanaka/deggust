@@ -12,11 +12,11 @@ plot1 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
 
 plot2 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids) {
 
-  prep <- cook_design(.edibble)
-  vlevs <- prep$fct_levels()
+  prov <- edibble::activate_provenance(.edibble)
+  vlevs <- prov$fct_levels(return = "value")
   nlevels_units <- lengths(vlevs[flist$node])
-  parent_label <- prep$fct_names(parentids)
-  obs_label <- prep$fct_names(obsid)
+  parent_label <- prov$fct_names(id = parentids)
+  obs_label <- prov$fct_names(id = obsid)
 
   nodes <- split(.edibble, .edibble[[parent_label]])
   nodes <- lapply(nodes, function(df) cbind(df, coord_snake(nrow(df), aspect_ratio)))
@@ -35,10 +35,10 @@ plot2 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
 
 
 plot3 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids) {
-  prep <- cook_design(.edibble)
-  vlevs <- prep$fct_levels()
+  prov <- edibble::activate_provenance(.edibble)
+  vlevs <- prov$fct_levels(return = "value")
   if(length(parentids)==2) {
-    parent_labels <- prep$fct_names(parentids)
+    parent_labels <- prov$fct_names(parentids)
     parent1 <- parent_labels[which.max(lengths(vlevs[parent_labels]))]
     parent2 <- setdiff(parent_labels, parent1)
 
@@ -48,8 +48,8 @@ plot3 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
       scale_x_discrete(limits = levels(.edibble[[parent1]])) +
       scale_y_discrete(limits = levels(.edibble[[parent2]]))
   } else if(length(parentids)==1) {
-    aids <- intersect(prep$fct_ancestor(obsid), setdiff(prep$unit_ids, obsid))
-    ancestors <- prep$fct_names(aids)
+    aids <- intersect(prov$fct_ancestor(obsid), setdiff(prov$unit_ids, obsid))
+    ancestors <- prov$fct_names(aids)
     nodes <- split(.edibble, paste0(.edibble[[ancestors[1]]], .edibble[[ancestors[2]]]))
     nodes <- lapply(nodes, function(df) cbind(df, coord_snake(nrow(df), aspect_ratio)))
     nodes <- do.call(rbind, nodes)
@@ -69,10 +69,10 @@ plot3 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
 
 plot4 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids) {
 
-  prep <- cook_design(.edibble)
-  parents <- rev(prep$fct_names(parentids))
-  unames <- prep$unit_names
-  ou <- prep$fct_names(obsid)
+  prov <- edibble::activate_provenance(.edibble)
+  parents <- rev(prov$fct_names(id = parentids))
+  unames <- prov$unit_names()
+  ou <- prov$fct_names(id = obsid)
   block <- ifelse(length(parentids)==3, parents[3], setdiff(unames, c(parents, ou)))
   # FIXME the facet free_x doesn't work with edibble units
   # below is a temporary measure to make it work
@@ -89,8 +89,8 @@ plot4 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
 
 
 plot5 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids) {
-  prep <- cook_design(.edibble)
-  parent_labels <- prep$fct_names(parentids)
+  prov <- edibble::activate_provenance(.edibble)
+  parent_labels <- prov$fct_names(id = parentids)
   parents <- names(sort(-lengths(flvls[parent_labels])))
 
   plot <- ggplot(.edibble, aes(!!parse_expr(parents[1]), !!parse_expr(parents[2])))
