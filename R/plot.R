@@ -48,7 +48,7 @@ plot3 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
       scale_x_discrete(limits = levels(.edibble[[parent1]])) +
       scale_y_discrete(limits = levels(.edibble[[parent2]]))
   } else if(length(parentids)==1) {
-    aids <- intersect(prov$fct_ancestor(obsid), setdiff(prov$unit_ids, obsid))
+    aids <- intersect(prov$fct_id_ancestor(obsid), setdiff(prov$unit_ids, obsid))
     ancestors <- prov$fct_names(aids)
     nodes <- split(.edibble, paste0(.edibble[[ancestors[1]]], .edibble[[ancestors[2]]]))
     nodes <- lapply(nodes, function(df) cbind(df, coord_snake(nrow(df), aspect_ratio)))
