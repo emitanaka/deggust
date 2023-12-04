@@ -21,11 +21,10 @@ Imports:
     rlang,
     grid,
     magick,
-    edibble (>= 1.0.0),
+    edibble (>= 1.1.0),
     ggnewscale
 URL: http://deggust.emitanaka.org, https://github.com/emitanaka/deggust
 BugReports: https://github.com/emitanaka/deggust/issues
-Remotes: emitanaka/edibble
 Suggests: 
     testthat,
     knitr,
