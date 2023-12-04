@@ -104,9 +104,11 @@ plot5 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
 
 
 add_unit <- function(plot, fill, shape, image, height, width, size) {
-  if(is.na(image)) {
+  if(is.na(image) & !is.null(fill)) {
     plot <- plot + geom_unit_node(aes(fill = !!parse_expr(fill)), shape = shape, height = height, width = width)
-  } else {
+  } else if(is.na(image) & is.null(fill)) {
+    plot <- plot + geom_unit_node(shape = shape, height = height, width = width)
+  } else if(!is.na(image)) {
     if(!require("ggimage")) {
       stop("Please install `ggimage` package to use the image argument.")
     }
@@ -131,78 +133,82 @@ add_text <- function(plot, text, label) {
 }
 
 add_unit_fills <- function(plot, flist, flvls, shapes, images, control) {
-  nfill <- length(flist$fill)
-  plot <- add_unit(plot, flist$fill[1], shapes[1], images[1], height = 1, width = 1, size = 0.1)
+  if(is.null(flist$fill)) {
+    nfill <- length(flist$fill)
+    plot <- add_unit(plot, flist$fill[1], shapes[1], images[1], height = 1, width = 1, size = 0.1)
 
-  nfill_max <- rep(control$nfill_max, length.out = nfill)
-  random_fills <- rep(control$random_fills, length.out = nfill)
-  fill_lvls <- list()
-  for(ifill in seq_along(flist$fill)) {
-    fill_lvls[[ifill]] <- lvl_lump_keep(flvls[[flist$fill[ifill]]],
-                                        nfill_max[ifill],
-                                        random_fills[ifill])
-  }
-  nmax_fills <- lengths(fill_lvls)
+    nfill_max <- rep(control$nfill_max, length.out = nfill)
+    random_fills <- rep(control$random_fills, length.out = nfill)
+    fill_lvls <- list()
+    for(ifill in seq_along(flist$fill)) {
+      fill_lvls[[ifill]] <- lvl_lump_keep(flvls[[flist$fill[ifill]]],
+                                          nfill_max[ifill],
+                                          random_fills[ifill])
+    }
+    nmax_fills <- lengths(fill_lvls)
 
-  opt_fills <- deggust_opt("discrete.fill")[rank(lengths(deggust_opt("discrete.fill")))]
-  find_fill_scale <- function(i) {
-    if(i <= length(opt_fills[[length(opt_fills)]])) {
-      k <- 1
-      while(i > length(opt_fills[[k]])) {
-        k <- k + 1
+    opt_fills <- deggust_opt("discrete.fill")[rank(lengths(deggust_opt("discrete.fill")))]
+    find_fill_scale <- function(i) {
+      if(i <= length(opt_fills[[length(opt_fills)]])) {
+        k <- 1
+        while(i > length(opt_fills[[k]])) {
+          k <- k + 1
+        }
+        return(k)
+      } else {
+        return(0)
       }
-      return(k)
-    } else {
-      return(0)
     }
-  }
-  other_color <- "#FFFFFF"
-  virdis_opts <- c("A", "D", "E")
-  get_viridis_pal <- function(i) {
-    viridis::viridis_pal(option = virdis_opts[1])(i)
-  }
-
-  chosen_fills <- list()
-  for(imax in seq_along(nmax_fills)) {
-    nmax_fill <- nmax_fills[imax]
-    nlvl <- length(flvls[[flist$fill[imax]]])
-    k <- find_fill_scale(nmax_fill)
-    m <- ifelse(has_other <- nlvl > nmax_fill, nmax_fill - 1, nlvl)
-    if(k > 0) {
-      cols <- opt_fills[[k]]
-      chosen_fills[[imax]] <- if(has_other) c(cols[1:m], other_color) else cols[1:m]
-      opt_fills[[k]] <- NULL
-    } else {
-      cols <- get_viridis_pal(m)
-      chosen_fills[[imax]] <- if(has_other) c(cols[1:m], other_color) else cols[1:m]
-      virdis_opts <- virdis_opts[-1]
+    other_color <- "#FFFFFF"
+    virdis_opts <- c("A", "D", "E")
+    get_viridis_pal <- function(i) {
+      viridis::viridis_pal(option = virdis_opts[1])(i)
     }
-  }
 
-  plot <- plot + scale_fill_manual(limits = fill_lvls[[1]],
-                                   values = chosen_fills[[1]],
-                                   na.value = other_color)
+    chosen_fills <- list()
+    for(imax in seq_along(nmax_fills)) {
+      nmax_fill <- nmax_fills[imax]
+      nlvl <- length(flvls[[flist$fill[imax]]])
+      k <- find_fill_scale(nmax_fill)
+      m <- ifelse(has_other <- nlvl > nmax_fill, nmax_fill - 1, nlvl)
+      if(k > 0) {
+        cols <- opt_fills[[k]]
+        chosen_fills[[imax]] <- if(has_other) c(cols[1:m], other_color) else cols[1:m]
+        opt_fills[[k]] <- NULL
+      } else {
+        cols <- get_viridis_pal(m)
+        chosen_fills[[imax]] <- if(has_other) c(cols[1:m], other_color) else cols[1:m]
+        virdis_opts <- virdis_opts[-1]
+      }
+    }
 
-  if(nfill > 1) {
-    plot <- another_fill_scale(plot, 2, flist$fill[2], shape = shapes[2], image = images[2],
-                               height = ifelse(nfill > 2, 0.66, 0.5),
-                               width = ifelse(nfill > 2, 0.66, 0.5),
-                               size = ifelse(nfill > 2, 0.066, 0.05))
-    plot <- plot + scale_fill_manual(limits = fill_lvls[[2]],
-                                     values = chosen_fills[[2]],
+    plot <- plot + scale_fill_manual(limits = fill_lvls[[1]],
+                                     values = chosen_fills[[1]],
                                      na.value = other_color)
 
-    if(nfill > 2) {
-      plot <- another_fill_scale(plot, 3, flist$fill[3], shape = shapes[3], image = images[3],
-                                 height = 0.33, width = 0.33, size = 0.033)
-      plot <- plot + scale_fill_manual(limits = fill_lvls[[3]],
-                                       values = chosen_fills[[3]],
+    if(nfill > 1) {
+      plot <- another_fill_scale(plot, 2, flist$fill[2], shape = shapes[2], image = images[2],
+                                 height = ifelse(nfill > 2, 0.66, 0.5),
+                                 width = ifelse(nfill > 2, 0.66, 0.5),
+                                 size = ifelse(nfill > 2, 0.066, 0.05))
+      plot <- plot + scale_fill_manual(limits = fill_lvls[[2]],
+                                       values = chosen_fills[[2]],
                                        na.value = other_color)
 
+      if(nfill > 2) {
+        plot <- another_fill_scale(plot, 3, flist$fill[3], shape = shapes[3], image = images[3],
+                                   height = 0.33, width = 0.33, size = 0.033)
+        plot <- plot + scale_fill_manual(limits = fill_lvls[[3]],
+                                         values = chosen_fills[[3]],
+                                         na.value = other_color)
+
+      }
     }
+    plot + guides(fill_new_new = guide_legend(order = 1),
+                  fill_new = guide_legend(order = 2),
+                  fill = guide_legend(order = 3))
+  } else {
+    add_unit(plot, fill = NULL, shapes[1], images[1], height = 1, width = 1, size = 0.1)
   }
-  plot + guides(fill_new_new = guide_legend(order = 1),
-                fill_new = guide_legend(order = 2),
-                fill = guide_legend(order = 3))
 }
 

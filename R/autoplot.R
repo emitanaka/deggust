@@ -50,7 +50,7 @@ autoplot.edbl_table <- function(.edibble,
                 fill = fill %||% tnames,
                 node = node %||% unames)
   flvls <- prov$fct_levels(return = "value")
-  shapes <- rep(shape, length.out = min(length(flist$fill), 3))
+  shapes <- rep(shape, length.out = min(ifelse(length(flist$fill)==0, 1, length(flist$fill)), 3))
   images <- rep(image %||% NA, length.out = min(length(flist$fill), 3))
   nnodes <- length(flist$node)
   nfill <- length(flist$fill)
