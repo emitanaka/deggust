@@ -54,8 +54,9 @@ autoplot.edbl_table <- function(.edibble,
   images <- rep(image %||% NA, length.out = min(length(flist$fill), 3))
   nnodes <- length(flist$node)
   nfill <- length(flist$fill)
-  obsid <- prov$fct_id_leaves(role = "edbl_unit")
-  parentids <- prov$fct_id_parent(id = obsid, role = "edbl_unit")
+  uids <- prov$fct_id(name = flist$node, role = "edbl_unit")
+  obsid <-  find_youngest(uids, prov) #prov$fct_id_leaves(role = "edbl_unit")
+  parentids <- intersect(prov$fct_id_parent(id = obsid, role = "edbl_unit"), uids)
 
 
   plot_set <- list(show_border = FALSE,
@@ -129,6 +130,11 @@ plot_set_last <- function(plot, set) {
   plot
 }
 
+find_youngest <- function(uids, prov) {
+  nchilds <- map_int(uids, function(x) length(prov$fct_id_child(x)))
+  uids[which.min(nchilds)]
+}
+
 theme_axis <- function() {
   theme(axis.text.x = element_text(color = "black", size = 8,
                                    angle = 270,
@@ -152,7 +158,7 @@ plot_default <- function() {
                strip.background = element_rect(color = "black", size = 2),
                strip.text = element_text(margin = margin(5, 5, 5, 5), face = "bold"),
                plot.title = element_text(margin = margin(b = 5), face = "bold"),
-               plot.subtitle = element_text(family = "mono"),
+               plot.subtitle = element_text(family = "mono", margin = margin(b = 5)),
                plot.title.position = "plot"))
   #coord_equal()
 
