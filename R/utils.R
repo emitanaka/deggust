@@ -4,7 +4,7 @@ remove_nulls <- function(.x) {
 }
 
 coord_theta <- function(n) {
-  unlist(lapply(seq(1, n^(2/3), 1), function(i) seq((i - 1) * 2 * pi, i * 2 * pi, length.out = ceiling(0.5 * i * i) + 1)[c(-ceiling(0.5 * i * i) - 1)]))[1:n]
+  unlist(lapply(seq(1, n, 1), function(i) seq((i - 1) * 2 * pi, i * 2 * pi, length.out = ceiling(0.5 * i * i) + 1)[c(-ceiling(0.5 * i * i) - 1)]))[1:n]
 }
 
 coord_spiral <- function(n) {
