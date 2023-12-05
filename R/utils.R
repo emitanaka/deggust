@@ -3,6 +3,18 @@ remove_nulls <- function(.x) {
   .x[!vapply(.x, is.null, logical(1))]
 }
 
+coord_theta <- function(n) {
+  unlist(lapply(seq(1, n^(2/3), 1), function(i) seq((i - 1) * 2 * pi, i * 2 * pi, length.out = ceiling(0.5 * i * i) + 1)[c(-ceiling(0.5 * i * i) - 1)]))[1:n]
+}
+
+coord_spiral <- function(n) {
+  #theta <- seq(0, n / 5 * pi, length.out = n)
+  theta <- coord_theta(n)
+  r <- 0 + 0.2 * theta
+  list(x = r * cos(theta),
+       y = r * sin(theta))
+}
+
 coord_snake <- function(n, aspect_ratio, swap = TRUE) {
   h <- ceiling(sqrt(n * aspect_ratio))
   w <- ceiling(sqrt(n / aspect_ratio))
@@ -56,3 +68,5 @@ lvl_lump_keep <- function(lvls, n, random = FALSE) {
   other <- paste(nl - n, "others")
   c(lvls[index], other)
 }
+
+

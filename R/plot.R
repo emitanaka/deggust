@@ -4,8 +4,19 @@ plot1 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
   ufct <- .edibble[[flist$node[1]]]
   nfill <- length(flist$fill)
   N <- nrow(.edibble)
-  nodes <- cbind(.edibble, coord_snake(N, aspect_ratio))
-  plot <- ggplot(nodes, aes(x, y)) + geom_path()
+  plot <- switch(control$node_connection,
+                 snake = {
+                   nodes <- cbind(.edibble, coord_snake(N, aspect_ratio))
+                   ggplot(nodes, aes(x, y)) + geom_path()
+                 },
+                 spiral = {
+                   nodes <- cbind(.edibble, coord_spiral(N))
+                   # Archimedian Spiral
+                   theta <- seq(0, max(coord_theta(N)), 0.01)
+                   r <- 0 + 0.2 * theta
+                   ggplot(nodes, aes(x, y)) +
+                     geom_path(data = data.frame(x = r * cos(theta), y = r * sin(theta)))
+                 })
   plot <- add_unit_fills(plot, flist, flvls, shapes, images, control)
   add_text(plot, text, .edibble[[flist$node[1]]])
 }
@@ -19,14 +30,27 @@ plot2 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
   obs_label <- prov$fct_names(id = obsid)
 
   nodes <- split(.edibble, .edibble[[parent_label]])
-  nodes <- lapply(nodes, function(df) cbind(df, coord_snake(nrow(df), aspect_ratio)))
-  nodes <- do.call(rbind, nodes)
+  nodes_split <- switch(control$node_connection,
+                  snake = lapply(nodes, function(df) cbind(df, coord_snake(nrow(df), aspect_ratio))),
+                  spiral = lapply(nodes, function(df) cbind(df, coord_spiral(nrow(df)))))
+  nodes <- do.call(rbind, nodes_split)
 
   nfill <- length(flist$fill)
 
   plot <- ggplot(nodes, aes(x = x, y = y)) +
-    geom_path() +
     facet_wrap(parse_expr(parent_label))
+
+  plot <- switch(control$node_connection,
+                 snake = {
+                   plot + geom_path()
+                 },
+                 spiral = {
+                   # Archimedian Spiral
+                   thetar <- map_dbl(nodes_split, function(df) max(coord_theta(nrow(df))))
+                   theta <- seq(0, max(thetar), 0.01)
+                   r <- 0 + 0.2 * theta
+                   plot + geom_path(data = data.frame(x = r * cos(theta), y = r * sin(theta)))
+                 })
 
   plot <- add_unit_fills(plot, flist, flvls, shapes, images, control)
 
@@ -133,7 +157,7 @@ add_text <- function(plot, text, label) {
 }
 
 add_unit_fills <- function(plot, flist, flvls, shapes, images, control) {
-  if(is.null(flist$fill)) {
+  if(length(flist$fill)) {
     nfill <- length(flist$fill)
     plot <- add_unit(plot, flist$fill[1], shapes[1], images[1], height = 1, width = 1, size = 0.1)
 
