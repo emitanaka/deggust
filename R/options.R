@@ -33,7 +33,7 @@ deggust_control <- function(page = 1,
                             nfill_max = deggust_opt("nfill_max"),
                             random_fills = FALSE,
                             random_units = FALSE,
-                            node_connection = c("spiral", "snake")) {
+                            node_connection = c("snake", "spiral")) {
 
   list(page = page,
        nnode_max = nnode_max,
