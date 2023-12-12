@@ -38,12 +38,24 @@ autoplot.edbl_table <- function(.edibble,
                                 fill = NULL,
                                 node = NULL,
                                 horizontal = TRUE,
-                                control = deggust_control()) {
+                                page = 1,
+                                linewidth = 2,
+                                nnode_max = deggust_opt("nnode_max"),
+                                nfill_max = deggust_opt("nfill_max"),
+                                coord = c("snake", "spiral")) {
 
   prov <- edibble::activate_provenance(.edibble)
+  coord <- match.arg(coord)
   unames <- prov$unit_names()
   tnames <- prov$trt_names()
   rnames <- prov$rcrd_names()
+  control <- list(horizontal = horizontal,
+                  page = page,
+                  nnode_max = nnode_max,
+                  nfill_max = nfill_max,
+                  random_fills = FALSE,
+                  linewidth = linewidth,
+                  coord = coord)
   flist <- list(units = unames,
                 trts = tnames,
                 rcrds = rnames,
@@ -67,22 +79,22 @@ autoplot.edbl_table <- function(.edibble,
   # FIXME: control should be probably applied at the plot not the data
 
   # nnode_max
-  # FIXME: not using control$random_units at the moment
+  # FIXME: not using random_units at the moment
   # This however makes the page control hard though so perhaps don't go ahead with it?
-  min_index <- ifelse(is.infinite(control$nnode_max), 1L, (control$page - 1) * control$nnode_max + 1)
-  max_index <- min(control$page * control$nnode_max, nrow(.edibble))
+  min_index <- ifelse(is.infinite(nnode_max), 1L, (page - 1) * nnode_max + 1)
+  max_index <- min(page * nnode_max, nrow(.edibble))
   data <- .edibble[min_index:max_index, ]
 
 
   # # nfill_max
-  # control$nfill_max <- rep(control$nfill_max, length.out = nfill)
-  # control$random_fills <- rep(control$random_fills, length.out = nfill)
+  # nfill_max <- rep(nfill_max, length.out = nfill)
+  # random_fills <- rep(random_fills, length.out = nfill)
   # for(ifill in seq_along(flist$fill)) {
   #   data[[flist$fill[ifill]]] <- lvl_lump(data[[flist$fill[ifill]]],
-  #                                       control$nfill_max[ifill],
-  #                                       control$random_fills[ifill])
+  #                                       nfill_max[ifill],
+  #                                       random_fills[ifill])
   # }
-  if(control$page==1) warn_drop(.edibble, data)
+  if(page==1) warn_drop(.edibble, data)
 
   if(nnodes==1) {
     # snake-like plot, CRD
@@ -127,7 +139,11 @@ plot_set_last <- function(plot, set) {
     plot <- plot + theme_axis()
   }
 
-  plot
+  if(is_theme_default()) {
+    plot
+  } else {
+    plot + ggplot2::theme_get()
+  }
 }
 
 find_youngest <- function(uids, prov) {
@@ -162,4 +178,11 @@ plot_default <- function() {
                plot.title.position = "plot"))
   #coord_equal()
 
+}
+
+# Thanks https://community.rstudio.com/t/how-to-check-if-the-user-has-set-a-global-ggplot-theme-with-theme-set-or-not/129162/2
+is_theme_default <- function() {
+  comparison <- all.equal(ggplot2::theme_get(), ggplot2::theme_gray())
+  if (is.logical(comparison) & isTRUE(comparison)) return(TRUE)
+  FALSE
 }
