@@ -3,7 +3,7 @@ op.deggust <- list(
   deggust.nfill_max = 8,
   deggust.discrete.fill = list(
     # Paul Tol's high contrast
-    c("#DDAA33", "#BB5566", "#004488", "#000000", '#FFFFFF'), # 5
+    c("#DDAA33", "#BB5566", "#004488", "#e3e3e3", '#FFFFFF'), # 5
     # okabe ito + white
     c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000", '#FFFFFF'), # 9
     # Paul Tol's muted + black
