@@ -9,7 +9,7 @@ plot1 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
                    nodes <- cbind(.edibble, coord_snake(N, aspect_ratio))
                    ggplot(nodes, aes(x, y)) +
                      geom_node_shape(data = data.frame(x = 0.4, y = 1), fill = "black",
-                                     angle = 90, shape = "triangle", width = 0.7, height = 0.5) +
+                                     angle = 4 * pi/3, shape = "triangle", width = 0.7, height = 0.5) +
                      geom_path(linewidth = control$linewidth)
                  },
                  spiral = {
@@ -217,6 +217,11 @@ add_unit_fills <- function(plot, flist, flvls, shapes, images, control) {
     plot <- plot + scale_fill_manual(limits = fill_lvls[[1]],
                                      values = chosen_fills[[1]],
                                      na.value = other_color)
+
+    if(nfill == 1) {
+      plot <- plot + geom_text(aes(label = abbreviate(.data[[flist$fill]], minlength = 1)),
+                               data = ~subset(., !.[[flist$fill]] %in% fill_lvls[[1]]))
+    }
 
     if(nfill > 1) {
       plot <- another_fill_scale(plot, 2, flist$fill[2], shape = shapes[2], image = images[2],
