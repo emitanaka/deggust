@@ -41,6 +41,7 @@ autoplot.edbl_table <- function(.edibble,
                                 random_fills = TRUE,
                                 page = 1,
                                 linewidth = 2,
+                                label_size = 5,
                                 nnode_max = deggust_opt("nnode_max"),
                                 nfill_max = deggust_opt("nfill_max"),
                                 coord = c("snake", "spiral")) {
@@ -56,7 +57,8 @@ autoplot.edbl_table <- function(.edibble,
                   nfill_max = nfill_max,
                   random_fills = random_fills,
                   linewidth = linewidth,
-                  coord = coord)
+                  coord = coord,
+                  label_size = label_size)
   flist <- list(units = unames,
                 trts = tnames,
                 rcrds = rnames,

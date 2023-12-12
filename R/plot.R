@@ -80,6 +80,7 @@ label_panel <- function(flist, obsid, plot, flvls, shapes, images, control, node
     plot <- plot +
       geom_text(x = (max(nodes$x) + 1)/2, y = 0.2,
                 aes(label = ..label),
+                size = control$label_size,
                 data = ~{
                   data <- .x[trts_block]
                   .x$..label <- do.call(paste, c(data, list(sep = " / ")))
@@ -89,6 +90,7 @@ label_panel <- function(flist, obsid, plot, flvls, shapes, images, control, node
   }
   if(length(trts_remaining)) {
     plot <- plot + geom_text(aes(label = ..label),
+                             size = control$label_size,
                              data = ~{
                                data <- lapply(.x[trts_remaining], function(x) abbreviate(x, minlength = 1))
                                .x$..label <- do.call(paste, c(data, list(sep = "/")))
@@ -207,7 +209,8 @@ add_text <- function(plot, text, label) {
       text_aes["inherit.blank"] <- NULL
     }
     plot <- plot +
-      do.call("geom_text", c(list(mapping = aes(label = label)),
+      do.call("geom_text", c(list(mapping = aes(label = label),
+                                  size = control$label_size),
                              text_aes))
   }
   plot
@@ -269,6 +272,7 @@ add_unit_fills <- function(plot, flist, flvls, shapes, images, control) {
 
     if(nfill == 1) {
       plot <- plot + geom_text(aes(label = abbreviate(.data[[flist$fill]], minlength = 1)),
+                               size = control$label_size,
                                data = ~subset(., !.[[flist$fill]] %in% fill_lvls[[1]]))
     }
 
