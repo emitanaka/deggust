@@ -70,7 +70,7 @@ GeomNodeShape <- ggproto("GeomNodeShape", Geom,
                                            size = 1,
                                            lwd = 1, lty = "solid",
                                            alpha = 1, fill = "white",
-                                           width = NULL, height = NULL),
+                                           width = NULL, height = NULL, angle = NULL),
                          setup_data = function(data, params) {
                            data$width <- data$width %||% params$width %||% resolution(data$x, FALSE) * 0.8
                            data$height <- data$height %||% params$height %||% resolution(data$y, FALSE) * 0.8
@@ -79,7 +79,7 @@ GeomNodeShape <- ggproto("GeomNodeShape", Geom,
                            data_shape <- split(data, data$shape)
                            data_shape <- lapply(data_shape, function(df) {
                                n <- n_shape(df$shape[1])
-                               phase <- phase_shape(df$shape[1])
+                               phase <- data$angle %||% params$angle %||% phase_shape(df$shape[1])
                                regular_polygon_data(df, n = n, phase = phase)
                              })
                            do.call(rbind, data_shape)
