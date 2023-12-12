@@ -68,13 +68,15 @@ autoplot.edbl_table <- function(.edibble,
   parentids <- intersect(prov$fct_id_parent(id = obsid, role = "edbl_unit"), uids)
 
   nfill <- length(flist$fill)
-
-  tnames_with_selected_nodes <- tnames[map_int(tnames, function(nm) prov$mapping_to_unit(id = prov$fct_id(name = nm))) %in% uids]
+  tnames_to_uid <- map_int(tnames, function(nm) prov$mapping_to_unit(id = prov$fct_id(name = nm)))
+  tnames_to_unames <- setNames(prov$fct_names(id = tnames_to_uid), tnames)
+  tnames_with_selected_nodes <- tnames[tnames_to_uid %in% uids]
   flist$fill <- fill %||% tnames_with_selected_nodes
   if(any(!flist$fill %in% tnames_with_selected_nodes)) {
     flist$fill <- intersect(flist$fill, tnames_with_selected_nodes)
     warning("Some of the fill variables are either not treatment variables, or are not mapped to selected units. They are ignored.")
   }
+  flist$t2u <- tnames_to_unames[flist$fill]
   shapes <- rep(shape, length.out = min(ifelse(length(flist$fill)==0, 1, length(flist$fill)), 3))
   images <- rep(image %||% NA, length.out = min(length(flist$fill), 3))
 
@@ -127,6 +129,10 @@ autoplot.edbl_table <- function(.edibble,
     # tile plots + facet_grid e.g. hyper-graeco latin square design
     plot <- plot5(data, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids)
     plot_set$show_axis_labels <- TRUE
+  } else if(nnodes == 6 & length(parentids)==3) {
+    # row-col within row-col
+    plot <- plot6(data, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids)
+    plot_set$show_axis_labels <- FALSE
   } else {
     abort("`autoplot` is not yet supported for this design.")
   }

@@ -13,7 +13,7 @@ Encoding: UTF-8
 Language: es
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Depends:
     ggplot2
 Imports: 
@@ -22,7 +22,8 @@ Imports:
     grid,
     magick,
     edibble (>= 1.1.0),
-    ggnewscale
+    ggnewscale,
+    dplyr
 URL: http://deggust.emitanaka.org, https://github.com/emitanaka/deggust
 BugReports: https://github.com/emitanaka/deggust/issues
 Suggests: 

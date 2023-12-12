@@ -48,7 +48,7 @@ plot2 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
                  snake = {
                    plot +
                      geom_node_shape(data = data.frame(x = 0.4, y = 1), fill = "black",
-                                     angle = 90, shape = "triangle", width = 0.7, height = 0.5) +
+                                     angle = 4 * pi/3, shape = "triangle", width = 0.7, height = 0.5) +
                      geom_path(linewidth = control$linewidth)
                  },
                  spiral = {
@@ -60,11 +60,44 @@ plot2 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
                                     linewidth = control$linewidth)
                  })
 
-  plot <- add_unit_fills(plot, flist, flvls, shapes, images, control)
-  plot <- plot + coord_equal()
+  plot <- label_panel(flist, obsid, plot, flvls, shapes, images, control, nodes, prov, block = parent_label)
   add_text(plot, text, nodes[[obs_label]])
 }
 
+label_panel <- function(flist, obsid, plot, flvls, shapes, images, control, nodes, prov, block) {
+  flist_node <- flist
+  flist_node$fill <- flist_node$fill[flist$t2u[flist_node$fill] %in% prov$fct_names(id = obsid)]
+  if(length(flist_node$fill) == 0) {
+    flist_node$fill <- flist$fill[1]
+  }
+  trts_remaining <- setdiff(flist$fill, flist_node$fill)
+  trts_block <- trts_remaining[flist$t2u[trts_remaining] == block]
+  trts_remaining <- setdiff(trts_remaining, trts_block)
+
+  plot <- add_unit_fills(plot, flist_node, flvls, shapes, images, control)
+  plot <- plot + coord_equal()
+  if(length(trts_block)) {
+    plot <- plot +
+      geom_text(x = (max(nodes$x) + 1)/2, y = 0.2,
+                aes(label = ..label),
+                data = ~{
+                  data <- .x[trts_block]
+                  .x$..label <- do.call(paste, c(data, list(sep = " / ")))
+                  dplyr::slice(.x, 1, .by = parse_expr(block))
+                })
+    plot <- plot + ylim(0, max(nodes$y) + 0.5)
+  }
+  if(length(trts_remaining)) {
+    plot <- plot + geom_text(aes(label = ..label),
+                             data = ~{
+                               data <- lapply(.x[trts_remaining], function(x) abbreviate(x, minlength = 1))
+                               .x$..label <- do.call(paste, c(data, list(sep = "/")))
+                               .x
+                             })
+  }
+
+  plot
+}
 
 plot3 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids) {
   prov <- edibble::activate_provenance(.edibble)
@@ -133,6 +166,22 @@ plot5 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, co
     facet_grid(as.formula(paste(parents[[3]], "~", parents[[4]])))
 }
 
+plot6 <- function(.edibble, flist, flvls, shapes, images, text, aspect_ratio, control, obsid, parentids) {
+  prov <- edibble::activate_provenance(.edibble)
+  subparent_labels <- prov$fct_names(id = parentids)
+  subparents <- names(sort(-lengths(flvls[subparent_labels])))
+  wholeunit <- flist$node[map_int(flist$node, function(node) length(prov$fct_id_child(id = prov$fct_id(name = node)))) == 3]
+  wholeunitid <- prov$fct_id(name = wholeunit)
+  parents <- prov$fct_names(id = prov$fct_id_parent(id = wholeunitid, role = "edbl_unit"))
+  nodes <- data.frame(x = as.integer(.edibble[[subparents[1]]]),
+                      y = as.integer(.edibble[[subparents[2]]]))
+
+  plot <- ggplot(cbind(.edibble, nodes), aes(x, y))
+
+  plot <- label_panel(flist, obsid, plot, flvls, shapes, images, control, nodes, prov, block = wholeunit)
+  plot +
+    facet_grid(as.formula(paste(parents[[1]], "~", parents[[2]])))
+}
 
 
 add_unit <- function(plot, fill, shape, image, height, width, size) {
