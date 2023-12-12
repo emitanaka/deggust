@@ -38,6 +38,7 @@ autoplot.edbl_table <- function(.edibble,
                                 fill = NULL,
                                 node = NULL,
                                 horizontal = TRUE,
+                                random_fills = TRUE,
                                 page = 1,
                                 linewidth = 2,
                                 nnode_max = deggust_opt("nnode_max"),
@@ -53,22 +54,29 @@ autoplot.edbl_table <- function(.edibble,
                   page = page,
                   nnode_max = nnode_max,
                   nfill_max = nfill_max,
-                  random_fills = FALSE,
+                  random_fills = random_fills,
                   linewidth = linewidth,
                   coord = coord)
   flist <- list(units = unames,
                 trts = tnames,
                 rcrds = rnames,
-                fill = fill %||% tnames,
                 node = node %||% unames)
   flvls <- prov$fct_levels(return = "value")
-  shapes <- rep(shape, length.out = min(ifelse(length(flist$fill)==0, 1, length(flist$fill)), 3))
-  images <- rep(image %||% NA, length.out = min(length(flist$fill), 3))
   nnodes <- length(flist$node)
-  nfill <- length(flist$fill)
   uids <- prov$fct_id(name = flist$node, role = "edbl_unit")
   obsid <-  find_youngest(uids, prov) #prov$fct_id_leaves(role = "edbl_unit")
   parentids <- intersect(prov$fct_id_parent(id = obsid, role = "edbl_unit"), uids)
+
+  nfill <- length(flist$fill)
+
+  tnames_with_selected_nodes <- tnames[map_int(tnames, function(nm) prov$mapping_to_unit(id = prov$fct_id(name = nm))) %in% uids]
+  flist$fill <- fill %||% tnames_with_selected_nodes
+  if(any(!flist$fill %in% tnames_with_selected_nodes)) {
+    flist$fill <- intersect(flist$fill, tnames_with_selected_nodes)
+    warning("Some of the fill variables are either not treatment variables, or are not mapped to selected units. They are ignored.")
+  }
+  shapes <- rep(shape, length.out = min(ifelse(length(flist$fill)==0, 1, length(flist$fill)), 3))
+  images <- rep(image %||% NA, length.out = min(length(flist$fill), 3))
 
 
   plot_set <- list(show_border = FALSE,
@@ -147,7 +155,7 @@ plot_set_last <- function(plot, set) {
 }
 
 find_youngest <- function(uids, prov) {
-  nchilds <- map_int(uids, function(x) length(prov$fct_id_child(x)))
+  nchilds <- map_int(uids, function(x) sum(prov$fct_id_child(x) %in% uids))
   uids[which.min(nchilds)]
 }
 
